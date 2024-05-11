@@ -1,0 +1,30 @@
+{%- comment -%}
+	Renders an article's tags, title, publisher, publisher date, description, and  a read more link
+
+	Accepts:
+	- article: {Object} Shopify article object
+	
+	Usage:
+	{%- render 'article-description', article: article -%}
+
+{%- endcomment -%}
+<header>
+	<!-- Article tags -->
+	{%- if article.tags != blank -%}
+		<div class="pt-3 pt-lg-0">
+			{%- for tag in article.tags -%}
+				<span> {{ tag }}{%- unless forloop.last -%}, {%- endunless -%}</span>
+			{%- endfor -%}
+		</div>
+	{%- endif -%}
+	<time datetime="{{ article.created_at | date: "%Y-%m-%d" }}">{{ article.created_at | date: "%y/%m/%d" }}</time>
+	<!-- Article title -->
+	<h2 class="mt-2 my-md-4"><a href="{{ article.url }}" title="{{ article.title }}" class="text-decoration-none">{{ article.title }}</a></h2>
+</header>
+<!-- Article content -->
+<p>{{ article.excerpt_or_content | strip_html | truncatewords: settings.blog_truncate }}</p>
+<p>By: {{ article.author }} <time datetime="{{ article.created_at | date: "%Y-%m-%d" }}">{{ article.created_at | date: "%y/%m/%d" }}</time></p>
+<!-- Article read more -->
+<footer>
+	<a href="{{ article.url }}" title="{{ article.title }}">Read more about {{ article.title }}</a>
+</footer>

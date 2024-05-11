@@ -1,0 +1,25 @@
+{
+	"sections": {
+		"main": {
+			"type": "product",
+			"blocks": {
+				"vendor": {
+					"type": "text",
+					"settings": {
+						"text": "{{ product.vendor }}"
+					}
+				},
+				"sku": {
+					"type": "sku"
+				}
+			},
+			"block_order": [
+				"vendor",
+				"sku"
+			]
+		}
+	},
+	"order": [
+		"main"
+	]
+}

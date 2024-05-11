@@ -1,0 +1,110 @@
+{%- comment -%}
+	Renders a product form with variant selector and add to cart options
+	
+	Accepts:
+	- product: {Object} Product Object
+	- current_variant: {Object} Select or First Available variant of product
+	- super_title?: {string} Optional super title element, renders as H2 tag
+	
+	Usage:
+	{%- render 'product-form' with product as product, current_variant: current_variant, super_title: section.settings.super_title -%}
+
+{%- endcomment -%}
+{%- liquid
+	comment
+	# Subscription plan (ready to use)
+	endcomment
+	assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+	
+	if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+		assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+	endif
+-%}
+{{ 'product-form.css' | asset_url | stylesheet_tag }}
+{%- form 'product', product, data-productid: product.id -%}
+	<h1>{{ product.title }}</h1>
+	{%- for block in section.blocks -%}
+		{%- case block.type -%}
+			{%- when '@app' -%}
+				{%- render block -%}
+			{%- comment -%} Metafield: Style {%- endcomment -%}
+			{%- when 'style' -%}
+				<p>Style: {{ product.metafields.theme.style | metafield_text }}</p>
+			{%- comment -%} Metafield: Limited Edition {%- endcomment -%}
+			{%- when 'limitedEdition' -%}
+				<p {{ block.shopify_attributes }}>Limited Edition: {{ block.settings.limited_edition }} {{ block.settings.limited_edition | pluralize: 'unit', 'units' }}</p>
+			{%- when 'text' -%}
+				<p {{ block.shopify_attributes }}>{{- block.settings.text -}}</p>
+			{%- when 'sku' -%}
+				<p {{ block.shopify_attributes }}>{{- block.settings.sku -}} <span data-variant-sku>{{ current_variant.sku }}</span></p>
+			{%- when 'rating' -%}
+				{%- render 'product-ratings', product: product, block: block -%}
+			{%- comment -%} MetaObject: Product Extra Content Accordion  {%- endcomment -%}
+			{%- when 'accordion' -%}
+				{%- render 'product-extra-info' with product as product -%}
+		{%- endcase -%}
+	{%- endfor -%}
+	{%- if super_title != blank -%}
+		<h2>{{ super_title }}</h2>
+	{%- endif -%}
+
+	{%- comment -%} Display Price {%- endcomment -%}
+	{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
+
+	<div class="rte">{{ product.description }}</div>
+	{%- unless product.has_only_default_variant -%}
+		{%- comment -%}
+			If the Option name contains `size` we display Buttons
+		{%- endcomment -%}
+		{%- for option in product.options_with_values -%}
+			{%- liquid
+				assign option_index = forloop.index0
+				assign option_name = option.name | downcase 
+				assign is_custom_select = false
+				if  option_name contains 'size'
+					assign is_custom_select = true
+				endif
+			-%}
+			{%- if is_custom_select == true -%}
+				<p class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</p>
+				<div class="selector-wrapper text-start{% if is_pdp == false %} d-none{% endif %}" data-custom-selector>
+					<ul>
+						{%- for value in option.values -%}
+						<li class="{% if option.selected_value == value %}selected{% endif %}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-value="{{ value | escape }}" data-selected="{% if option.selected_value == value %}true{% else %}false{% endif %}" data-single-option-selector>
+							<span class="option-block">{{ value }}</span>
+						</li>
+						{%- endfor -%}
+					</ul>
+				</div>
+			{%- else -%}
+				<div class="selector-wrapper js">
+					<label class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</label>
+					<select class="form-select" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector>
+						{%- for value in option.values -%}
+						<option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+						{%- endfor -%}
+					</select>
+				</div>
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endunless -%}
+	{%- comment -%} 
+		# Classic Quantity - uncomment if needed
+		<label class="form-label" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+		<input class="form-control mb-3" type="number" id="Quantity" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: item.variant.quantity_rule.min }}" min="{{ current_variant.quantity_rule.min | default: 1 }}"{% if current_variant.quantity_rule.max != blank %} max="{{ current_variant.quantity_rule.max | default: 15 }}"{%- endif -%}>
+	{%- endcomment -%}
+	<div class="quantity-wrapper w-100 d-flex align-items-center justify-content-between py-4" data-dynamic-qty>
+		<label class="form-label mb-0 me-4" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+		{%- render 'quantity-buttons', 
+			item: product, 
+			variant: current_variant, 
+			context: 'pdp' 
+		-%}
+	</div>
+	<button class="btn btn-primary position-relative d-flex justify-content-center" type="submit" name="add" data-add-to-cart{% unless current_variant.available %} disabled="disabled"{% endunless %}>
+		<span data-add-to-cart-text>
+			{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+		</span>
+		<span class="loading-copy pulse">{{ 'products.product.add_to_cart_loading' | t }}</span>
+	</button>
+{%- endform -%}

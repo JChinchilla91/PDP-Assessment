@@ -1,0 +1,33 @@
+{%- comment -%}
+	Renders pagination element
+	
+	Accepts:
+	- paginate: {Object} Shopify paginate object
+	
+	Usage:
+	{%- render 'pagination', paginate: paginate -%}
+	
+{%- endcomment -%}
+<nav aria-label="pagination">
+	<ul class="pagination pagination-lg justify-content-center">
+	{%- for part in paginate.parts -%}
+		{%- if forloop.first -%}
+		<li class="page-item{% unless paginate.previous.is_link %} disabled{% endunless %}">
+			<a class="page-link paginate-prev" href="{{ paginate.previous.url | default: collection.url }}" aria-label="Previous">
+				<span>&laquo;</span>
+			</a>
+		</li>
+		{%- endif -%}
+		<li class="page-item{% if paginate.current_page == part.title %} active{% endif %}">
+			<a class="page-link" href="{{ part.url | default: collection.url }}" title="{{ part.title }}">{{ part.title }}</a>
+		</li>
+		{%- if forloop.last -%}
+		<li class="page-item {% unless paginate.next.is_link %} disabled{% endunless %}">
+			<a class="page-link paginate-next" href="{{ paginate.next.url | default: collection.url }}" aria-label="Next">
+				<span>&raquo;</span>
+			</a>
+		</li>
+		{%- endif -%}
+	{%- endfor -%}
+	</ul>
+</nav>

@@ -1,0 +1,32 @@
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+/* ======================================================================= */
+/* ========== 			        	PRODUCT PAGE 	   			========== */
+/* ======================================================================= */
+.template-product {
+	.product-thumbnail a { 
+		display: block; 
+		&.current { border: 1px solid #000; }
+	}
+	.product-thumbnail video, .product-thumbnail iframe { width: 100%; }
+	.product-thumbnail iframe { min-height: 18.75rem; }
+}
+
+/* ======================================================================= */
+/* ========== 						Slider						========== */
+/* ======================================================================= */
+.product-slider {
+	/* enable Flickity by default */
+	[data-featured-slider]:after {
+		content: 'flickity';
+		display: none; /* hide :after */
+	}
+
+	@include break ($md) {
+		/* disable Flickity for large devices */
+		[data-featured-slider]:after {
+			content: '';
+		}
+	}
+}

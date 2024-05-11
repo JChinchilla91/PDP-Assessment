@@ -1,0 +1,58 @@
+{%- comment -%}
+	Make price / price discount / sold out display for product grids, product page and cart page
+	
+	Accepts:
+	- context {String} product|item
+	- product {Object} use 'with, as' keywords
+	
+	Usage:
+	{%- render 'product-price' with item as product, context: 'item' -%}
+
+{%- endcomment -%}
+{%- if context == 'product' -%}
+<div class="price">
+	{%- liquid
+		assign price_text = ''
+
+		if product.compare_at_price > product.price
+			if product.price_varies
+				assign sale_price = product.price | money
+				assign price_text = 'products.product.on_sale_from_html' | t: price: sale_price
+			else
+				assign price = product.price | money
+				assign price_text = 'products.product.on_sale' | t | append: ' ' | append: price
+			endif
+		else
+			if product.price_varies
+				assign price = product.price | money
+				assign price_text = 'products.product.from_text_html' | t: price: price
+			else
+				assign price_text = product.price | money
+			endif
+		endif
+	-%}
+	
+	{{ price_text }}
+	{%- if product.compare_at_price > product.price -%}
+		<span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span><s>{{ product.compare_at_price | money }}</s>
+	{%- endif -%}
+	{%- unless product.available -%}<span class="sold-out">{{ 'products.product.sold_out' | t }}</span>{%- endunless -%}
+</div>
+{%- endif -%}
+{%- if context == 'product-page' -%}
+<div data-price-wrapper>
+	{%- assign price_text = product.price | money -%}	
+	<span data-product-price>{{ price_text }}</span>
+	<span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span><s class="compare-price" data-compare-price>{{ product.compare_at_price | money }}</s>
+</div>
+{%- endif -%}
+{%- if context == 'item' -%}
+<div class="price">
+	{%- if product.original_line_price != product.line_price -%}
+		<span class="visually-hidden">{{ 'cart.label.discounted_price' | t }}</span>{{ product.price | money }}
+		<span class="visually-hidden">{{ 'cart.label.original_price' | t }}</span><s>{{ product.original_price | money }}</s>
+	{%- else -%}
+		{{ product.price | money }}
+	{%- endif -%}
+</div>
+{%- endif -%}

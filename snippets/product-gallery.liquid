@@ -1,0 +1,55 @@
+{%- comment -%}
+	Renders product main image and its gallery of images
+	
+	Accepts:
+	- product {Object} use 'with, as' keywords
+	
+	Usage:
+	{%- render 'product-gallery' with product as product -%}
+
+{%- endcomment -%}
+{%- liquid
+	assign current_variant = product.selected_or_first_available_variant
+	assign featured_image = current_variant.featured_image | default: product.featured_image
+
+	render 'responsive-image', image: featured_image, image_attributes: 'data-product-featured-image', image_class: 'img-fluid', lazyloading_style: 'eager', fetch_priority: true, image_attributes: 'data-product-featured-image'
+-%}
+{%- if product.images.size > 1 -%}
+	<!-- PRODUCT THUMBNAILS -->
+	<div class="product-thumbnail" data-product-thumbnails>
+		<div class="row">
+			{%- for media in product.media -%}
+				{%- if media.media_type == 'image' -%}
+					{%- liquid
+						assign media_variant_id = ''
+						for variant in product.variants
+							if variant.featured_media.id == media.id
+								assign media_variant_id = variant.id
+							endif
+						endfor
+					-%}
+					<div class="col-4 py-2">
+						<a href="{{ media | image_url: width: 1480 }}" title="{{ current_variant.title }}" data-media-id="{{ media.id }}" data-media-position="{{ media.position }}" data-media-variant-id="{{ media_variant_id }}"{%- if current_variant.id == media_variant_id -%} class="current" aria-current="true"{%- endif -%}>
+							{%- render 'responsive-image', image: media.src, image_class: 'img-fluid' -%}
+						</a>
+					</div>
+				{%- elsif media.media_type == 'video' -%}
+					<div class="col-12 py-2">
+						{{ media | media_tag: image_size: '2048x', autoplay: true, loop: false, controls: true, preload: 'none' }}
+					</div>
+				{%- elsif media.media_type == 'external_video' -%}
+					{%- assign video_class = 'js-' | append: media.host -%}
+					<div class="col-12 py-2">
+						{%- liquid
+							if media.host == 'youtube'
+								echo media | external_video_url: autoplay: true, loop: false, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy'
+							else
+								echo media | external_video_url: autoplay: true, loop: false | external_video_tag: class: video_class, loading: 'lazy'
+							endif
+						-%}
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+	</div>
+{%- endif -%}

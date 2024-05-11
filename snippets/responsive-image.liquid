@@ -1,0 +1,140 @@
+{%- comment -%}
+	Generates a fully responsive, LCP optimized image
+
+	Dependencies:
+	https://github.com/verlok/vanilla-lazyload
+
+	Accepts:
+		- image: {Object} Image object
+		- wrapper_class: {String} class name of the <div> wrapper
+		- wrapper_attributes: {String} additional HTML attributes of the <div> wrapper
+		- image_class: {String} class name of the <img> wrapper
+		- image_attributes: {String} additional HTML attributes of the <img>
+		- aspect_ratio: {Boolean} will use aspect ratio on wrapper - Default: true
+		- preloader_icon: {Boolean} display animated preloader - Default: true
+		- lazyloading_style: {String} Can be eager|lazy (optional) - Default: lazy
+		- fetch_priority: {Boolean} Give the himage hight priority loading, useful for above the fold image, in conjounction with lazyloading_style: eager
+
+	Usage: In your liquid template file, copy the following line
+
+	{%- render 'responsive-image', image: featured_image, image_class: "css-class", wrapper_class: "wrapper-css-class" -%}
+
+{%- endcomment -%}
+{%- comment -%}theme-check-disable UnknownFilter{%- endcomment -%}
+{%- if image != blank -%}
+	{%- liquid
+
+		comment
+		# Array of pixel sizes for image srcset
+		endcomment
+		assign image_widths_string = '180, 320, 540, 720, 960, 1080, 1280, 1980, 2560, 3840, 4096'
+		assign image_widths = image_widths_string | split: ', '
+		assign smallest_width = image_widths | first
+
+		comment
+		#	Image Dimensions
+		#	?NOTE: Justification for default image sizes: https://www.shopify.com/blog/image-sizes
+		endcomment
+		assign image_width = image.width | default: 2560
+		assign image_height = image.height | default: 960
+		assign low_res_image_width = image_width | times: smallest_width | divided_by: image_height
+		assign low_res_image_height = image_height | times: smallest_width | divided_by: image_width
+
+		comment
+		#	Image aspect ratio
+		#	Used as the value of the CSS variable that handles aspect ratio
+		assign image_aspect_ratio = image_width | append: '/' | append: image_height
+		endcomment
+
+		comment
+		#	Image URL
+		endcomment
+		assign image_url = image | image_url: width: image_width, height: image_height
+
+		comment
+		#	Default low resolution Image URL
+		#	Used on the "src" before lazyloading to avoid broken images
+		endcomment
+		assign low_res_image_url = image | image_url: width: low_res_image_width, height: low_res_image_height
+
+		comment
+		#	Image modifiers
+		#	without_reduction: makes the srcset only go above the images width instead of the full range
+		#	context: tells the snippet if the image is meant to be a background or a regular forefront image
+		endcomment
+		assign without_reduction = without_reduction | default: false
+		assign context = context | default: 'normal'
+
+		comment
+		#	Image Properties
+		#	Includes: loading style, fetch priority, alt text, focal point, srcset, sizes
+		endcomment
+		assign lazyloading_style = lazyloading_style | default: 'lazy'
+		assign fetch_priority = fetch_priority | default: false
+		assign alt_text = image.alt | default: "image" | escape
+		assign focal_point = image.presentation.focal_point | default: '50.0% 50.0%'
+
+		comment
+		#	Image SRCSET attribute
+		endcomment
+		capture srcset
+			for width in image_widths
+				assign width_num = width | plus: 0 | round
+				if without_reduction == true
+					if width_num >= image_width
+						assign img_url = image | image_url: width: width_num
+						echo img_url | append: ' ' | append: width_num | append: 'w, '
+					endif
+				else
+					if width_num <= image_width
+						assign img_url = image | image_url: width: width_num
+						echo img_url | append: ' ' | append: width_num | append: 'w, '
+					endif
+				endif
+			endfor
+		endcapture
+		assign srcset = srcset | replace_last: 'w, ', 'w'
+
+		comment
+		#	Viewport formula
+		# 	?NOTE: This formula is meant to be used on the "sizes" attribute to help the browser pick the best image for
+		# 	? the container it is in regards to the viewport and overall padding to the edges of the screen (containers)
+		endcomment
+		assign viewport_width_padding = '1rem'
+		assign viewport_width_formula = 'calc((100vw - ' | append: viewport_width_padding | append: ')'
+
+		comment
+		#	Image SIZES attribute
+		endcomment
+		capture sizes
+			if col_sm == nil and col_md == nil and col_lg == nil and col_xl == nil and col_xxl == nil
+				echo '100vw'
+			else
+				if col_xxl and image_width >= 1400
+					echo '(min-width: 1400px) ' | append: viewport_width_formula | append: ' / ' | append: col_xxl | append: '), '
+				endif
+				if col_xl and image_width >= 1200
+					echo '(min-width: 1200px) ' | append: viewport_width_formula | append: ' / ' | append: col_xl | append: '), '
+				endif
+				if col_lg and image_width >= 992
+					echo '(min-width: 992px) ' | append: viewport_width_formula | append: ' / ' | append: col_lg | append: '), '
+				endif
+				if col_md and image_width >= 768
+					echo '(min-width: 768px) ' | append: viewport_width_formula | append: ' / ' | append: col_md | append: '), '
+				endif
+				if col_sm and image_width >= 320
+					echo '(min-width: 567px) ' | append: viewport_width_formula | append: ' / ' | append: col_sm | append: '), '
+				endif
+				echo smallest_width
+			endif
+		endcapture
+	-%}
+	<div class="responsive-image{% if wrapper_class != blank %} {{ wrapper_class }}{% endif %}"{% if wrapper_attributes %} {{ wrapper_attributes }}{% endif %}><img class="{{ lazyloading_style }}{% if image_class != blank %} {{ image_class }}{% endif %}"{% if lazyloading_style == 'lazy' %} src="{{ low_res_image_url }}" data-src="{{ image_url }}" data-srcset="{{ srcset }}"{% else %} src="{{ image_url }}" srcset="{{ srcset }}"{% endif %} alt="{{ alt_text }}" sizes="{{ sizes }}" loading="{{ lazyloading_style }}" {% if fetch_priority %}fetchpriority="high" {% endif %} width="{{ image_width }}" height="{{ image_height }}" style=" object-position: {{ focal_point }};{% if focal_point != '50.0% 50.0%' %} object-fit: none;{% endif %}"{% if image_attributes != blank %} {{ image_attributes }}{% endif %}>{%- unless preloader_icon == false -%}<span class="image-preloader"></span>{%- endunless -%}</div>
+{%- else -%}
+	{%- if context != "background" -%}
+		{%- render 'no-image', wrapper_class: wrapper_class, wrapper_attributes: wrapper_attributes, image_class: image_class, image_attributes: image_attributes, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority -%}
+	{%- else -%}
+		{{ 'lifestyle-1' | placeholder_svg_tag: "placeholder-svg img-fluid lazy w-100 h-100" }}
+	{%- endif -%}
+{%- endif -%}
+{%- comment -%}theme-check-enable UnknownFilter{%- endcomment -%}

@@ -1,0 +1,54 @@
+{%- if section.settings.heading != blank or section.settings.address != blank -%}
+	{{ 'google-map.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'google-map.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<div class="container" data-section-id="{{ section.id }}" data-section-type="googleMap">
+		{%- if section.settings.heading != blank -%}
+			<div class="col-12 mb-lg-2 text-center copy-wrapper">
+				<h2>{{ section.settings.heading }}</h2>
+			</div>
+		{%- endif -%}
+		{%- if section.settings.api_key != blank and section.settings.address != blank -%}
+			<div class="pt-3 pt-lg-5">
+				<div id="map" data-address="{{ section.settings.address | escape }}" data-store-name="{{ shop.name }}" data-map-id="{{ section.settings.map_id }}"></div>
+			</div>
+			<script>
+			window.custom_marker = 'https:{{ 'marker.png' | asset_img_url : '32x' }}';
+			(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+				key: "{{ section.settings.api_key }}", v: "weekly"
+			});
+			</script>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Google Map",
+	"tag": "section",
+	"class": "section-google-map",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Map Title"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "address",
+			"label": "Address"
+		},
+		{
+			"type": "text",
+			"id": "api_key",
+			"label": "Google Map API Key"
+		},
+		{
+			"type": "text",
+			"id": "map_id",
+			"label": "Map ID",
+			"default": "ed06070d1653d708",
+			"info": "Google Map style"
+		}
+	]
+}
+{% endschema %}

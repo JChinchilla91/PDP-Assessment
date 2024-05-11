@@ -1,0 +1,22 @@
+{
+	"sections": {
+	"main": {
+	  "type": "article",
+	  "blocks": {
+		"article_block_text": {
+		  "type": "article_block_text"
+		},
+		"image_extra": {
+		  "type": "image_extra"
+		}
+	  },
+	  "block_order": [
+		"article_block_text",
+		"image_extra"
+	  ]
+	}
+  },
+  "order": [
+	"main"
+  ]
+}

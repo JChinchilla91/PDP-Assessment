@@ -1,0 +1,159 @@
+
+<script src="{{ 'video-banner.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{%- liquid
+	assign alignment = section.settings.alignment
+	if section.settings.alignment == 'left'
+		assign alignment = 'start'
+	elsif section.settings.alignment == 'right'
+		assign alignment = 'end'
+	endif
+-%}
+{%- comment -%}
+	CSS Only useful if the video is NOT autoplay 
+{%- endcomment -%}
+{%- if section.settings.video_id != blank -%}
+	{%- if section.settings.autoplay == false -%}
+	<style>
+		{%- if section.settings.provider == 'vimeo' -%}
+			/* play button VIMEO */
+			.vimeo-player > .playbtn { width: 6.5em; height: 4em; background: rgba(23,35,34,.75); z-index: 1; opacity: 0.8; border-radius: .5em;  transition: all 0.2s cubic-bezier(0, 0, 0.2, 1); outline: 0; border: 0; cursor: pointer; }
+			.vimeo-player:hover > .playbtn { background-color: rgb(0, 173, 239); opacity: 1; }
+			.vimeo-player > .playbtn::before { content: ''; border-style: solid; border-width: 10px 0 10px 20px; border-color: transparent transparent transparent #fff; margin-left: 2px; }
+			.vimeo-player > .playbtn, .vimeo-player > .playbtn::before { position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0); }
+		{%- elsif section.settings.provider == 'youtube' -%}
+			/* play button YOUTUBE */
+			.youtube-player > .playbtn { width: 68px; height: 48px; position: absolute; cursor: pointer; transform: translate3d(-50%, -50%, 0); top: 50%; left: 50%; z-index: 1; background-color: transparent; filter: grayscale(100%); transition: filter .1s cubic-bezier(0, 0, 0.2, 1); border: none; /* YT's actual play button svg */ background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 68 48"><path fill="%23f00" fill-opacity="0.8" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path d="M 45,24 27,14 27,34" fill="%23fff"></path></svg>');}
+			.youtube-player:hover > .playbtn, .youtube-player .playbtn:focus { filter: none; }			
+		{%- endif -%}
+		.video-player.activated { cursor: unset; /* Post-click styles */ }
+		.video-player.activated::before, .video-player.activated > .playbtn { opacity: 0; pointer-events: none; }
+	</style>
+	{%- endif -%}
+
+	<div data-section-id="{{ section.id }}" id="videoBanner{{ section.id }}" data-section-type="videoBanner"
+		data-provider="{{ section.settings.provider | handleize }}"
+		data-video-id="{{ section.settings.video_id }}"
+		data-video-autoplay="{{ section.settings.autoplay }}">
+		<!--- VIMEO --->		
+		{%- if section.settings.provider == "vimeo" -%}
+			{%- if section.settings.autoplay == true -%}
+			<div class="video-wrapper d-flex w-100 flex-wrap align-items-center justify-content-center">
+					<div class="heading-wrapper container d-flex align-items-center justify-content-center flex-column h-100">
+						<div class="text-{{ alignment }} p-5 p-lg-0">
+						{% if section.settings.hero_heading != blank %}<h1 class="title pb-3">{{ section.settings.hero_heading }}</h1>{% endif %}
+						{% if section.settings.hero_sub_heading != blank %}<p class="subtitle pb-3 h4">{{ section.settings.hero_sub_heading }}</p>{% endif %}
+						{% if section.settings.hero_caption != blank %}<p>{{ section.settings.hero_caption }}</p>{% endif %}
+						{%- if section.settings.hero_btn_text != blank and section.settings.hero_btn_link != blank -%}
+							<a class="btn btn-secondary" href="{{ section.settings.hero_btn_link }}" title="{{ section.settings.hero_btn_text }}">{{ section.settings.hero_btn_text }}</a>
+						{%- endif -%}
+						</div>
+					</div>
+			{%- endif -%}
+			<div id="V{{ section.id }}" class="video-player vimeo-player ratio"></div>
+			{%- if section.settings.autoplay == true -%}</div>{%- endif -%}
+		<!--- YOUTUBE --->
+		{%- elsif section.settings.provider == "youtube" -%}
+			{%- if section.settings.autoplay == true -%}
+			<div class="video-wrapper d-flex w-100 flex-wrap align-items-center justify-content-center">
+					<div class="heading-wrapper container d-flex align-items-center justify-content-center flex-column h-100">
+						<div class="text-{{ alignment }} p-5 p-lg-0">
+						{% if section.settings.hero_heading != blank %}<h1 class="title pb-3">{{ section.settings.hero_heading }}</h1>{% endif %}
+						{% if section.settings.hero_sub_heading != blank %}<p class="subtitle pb-3 h4">{{ section.settings.hero_sub_heading }}</p>{% endif %}
+						{% if section.settings.hero_caption != blank %}<p>{{ section.settings.hero_caption }}</p>{% endif %}
+						{%- if section.settings.hero_btn_text != blank and section.settings.hero_btn_link != blank -%}
+							<a class="btn btn-secondary" href="{{ section.settings.hero_btn_link }}" title="{{ section.settings.hero_btn_text }}">{{ section.settings.hero_btn_text }}</a>
+						{%- endif -%}
+						</div>
+					</div>
+			{%- endif -%}
+			<div id="V{{ section.id }}" class="video-player youtube-player ratio ratio-16x9"></div>
+			{%- if section.settings.autoplay == true -%}</div>{%- endif -%}
+		{%- endif -%}
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "External Video Banner",
+	"class": "section-video-banner",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "select",
+			"id": "provider",
+			"label": "Video Type",
+			"options": [
+				{
+					"value": "youtube",
+					"label": "YouTube"
+				},
+				{
+					"value": "vimeo",
+					"label": "Vimeo"
+				}
+			],
+			"info": "choose youtube or vimeo",
+			"default": "youtube"
+		},
+		{
+			"type": "header",
+			"content": "Video Option"
+		},
+		{
+			"type": "checkbox",
+			"id": "autoplay",
+			"label": "Autoplay",
+			"default": true,
+			"info": "Copy will only show if autoplay is ON"
+		},
+		{
+			"type": "text",
+			"id": "video_id",
+			"label": "Video ID",
+			"default": "_9VUPq3SxOc"
+		},
+		{
+			"type": "text_alignment",
+			"id": "alignment",
+			"label": "Text alignment",
+			"default": "center"
+		},
+		{
+			"type": "text",
+			"id": "hero_heading",
+			"label": "Hero Heading",
+			"default": "Video heading"
+		},
+		{
+			"type": "text",
+			"id": "hero_sub_heading",
+			"label": "Hero Subheading",
+			"default": "subheading"
+		},
+		{
+			"type": "text",
+			"id": "hero_caption",
+			"label": "Hero Caption",
+			"default": "caption"
+		},
+		{
+			"type": "text",
+			"id": "hero_btn_text",
+			"label": "Hero Button Text",
+			"default": "Button label"
+		},
+		{
+			"type": "url",
+			"id": "hero_btn_link",
+			"label": "Hero Button Link",
+			"default": "/collections"
+		}
+	],
+	"presets": [
+		{
+			"name": "Video Banner",
+			"category": "Homepage"
+		}
+	]
+}
+{% endschema %}

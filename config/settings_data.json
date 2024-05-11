@@ -1,0 +1,58 @@
+{
+  "current": {
+    "quickshop_enabled": true,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "list_id": "",
+          "footer_menu_1": "",
+          "footer_menu_2": "",
+          "cc_copy": ""
+        }
+      },
+      "16498708311b4385b0": {
+        "type": "hero-slider-flickity",
+        "blocks": {
+          "6820bfc6-88cb-4c11-b1f6-023f3f10fa7d": {
+            "type": "image",
+            "settings": {
+              "slider_image": "shopify:\/\/shop_images\/model-in-neutral-colors-by-window.jpg",
+              "hero_heading": "Quote",
+              "hero_sub_heading": "Heading",
+              "hero_caption": "Caption",
+              "hero_btn_text": "Shop Now",
+              "hero_btn_link": "shopify:\/\/pages\/contact"
+            }
+          },
+          "a617d280-b6d6-4dd8-b044-ea0bccc86906": {
+            "type": "image",
+            "settings": {
+              "slider_image": "shopify:\/\/shop_images\/enjoying-a-coffee-on-a-sunny-patio.jpg",
+              "hero_heading": "Quote",
+              "hero_sub_heading": "Subheading",
+              "hero_caption": "Caption",
+              "hero_btn_text": "Click Here",
+              "hero_btn_link": "shopify:\/\/products\/fake-product"
+            }
+          }
+        },
+        "block_order": [
+          "6820bfc6-88cb-4c11-b1f6-023f3f10fa7d",
+          "a617d280-b6d6-4dd8-b044-ea0bccc86906"
+        ],
+        "settings": {
+          "hero_overlay_color": "",
+          "range_opacity": 20
+        }
+      }
+    },
+    "content_for_index": [
+      "16498708311b4385b0"
+    ]
+  }
+}

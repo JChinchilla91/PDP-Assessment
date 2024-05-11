@@ -1,0 +1,13 @@
+{%- comment -%}
+	Badge to display how many items are in the customer's cart
+	
+	Accepts:
+	- item_count: {Number} number of items in the cart
+	
+	Usage:
+	{%- render 'cart-count-icon', item_count: cart.item_count -%}
+
+{%- endcomment -%}
+<span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark{% if item_count == 0 %} d-none{% endif %}" data-header-count data-cart-count>
+	{{- item_count | default: 0 -}}
+</span>

@@ -1,0 +1,36 @@
+{
+  "sections": {
+	"main": {
+	  "type": "product",
+	  "blocks": {
+		"vendor": {
+		  "type": "text",
+		  "settings": {
+			"text": "{{ product.vendor }}"
+		  }
+		},
+		"sku": {
+		  "type": "sku",
+		  "settings": {
+			"sku": "Sku:"
+		  }
+		}
+	  },
+	  "block_order": [
+		"vendor",
+		"sku"
+	  ],
+	  "settings": {
+	  }
+	},
+	"product-recommendations": {
+	  "type": "product-recommendations",
+	  "settings": {
+	  }
+	}
+  },
+  "order": [
+	"main",
+	"product-recommendations"
+  ]
+}

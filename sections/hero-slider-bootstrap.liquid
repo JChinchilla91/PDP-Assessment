@@ -1,0 +1,248 @@
+{{ 'simple-slider.css' | asset_url | stylesheet_tag: preload: section.settings.above_fold_hero }}
+<script src="{{ 'hero-slider-bootstrap.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<style>
+	#heroSliderBootstrap{{ section.id }} { height: {{ section.settings.height_mobile }}; } 
+	@media (min-width: 768px) {
+		#heroSliderBootstrap{{ section.id }} { height: {% if section.settings.height == '100vh' %}calc({{ section.settings.height }} - var(--header-height)){% else %}{{ section.settings.height }}{% endif %}; }
+	} 
+	{%- if section.settings.height_mobile != 'auto' -%}
+		@media (max-width: 768px) {
+			#heroSliderBootstrap{{ section.id }} .carousel-item { height: 100%; }
+		}
+	{%- endif -%}
+	{%- if section.settings.height != 'auto' -%}
+		@media (min-width: 768px) {
+			#heroSliderBootstrap{{ section.id }} .carousel-item { height: 100%; }
+		} 
+	{%- endif -%}
+</style>
+<div data-section-id="{{ section.id }}" id="heroSliderBootstrap{{ section.id }}" data-section-type="heroSliderBootstrap" class="hero-simple carousel slide" data-bs-ride="carousel">
+	{%- if section.blocks.size > 1 -%}
+		<ol class="carousel-indicators">
+		{%- for block in section.blocks -%}
+			<li data-bs-target="#heroSliderBootstrap{{ section.id }}" data-bs-slide-to="{{ forloop.index0 }}" class="{% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}></li>
+		{%- endfor -%}
+		</ol>
+	{%- endif -%}
+	{%- if section.blocks.size > 0 -%}
+		<div class="carousel-inner">
+			{%- for block in section.blocks -%}
+				<div class="carousel-item{% if forloop.first == true %} active{% endif %}" {{ block.shopify_attributes }}>
+					{%- liquid
+						assign text_alignment = block.settings.text_alignment
+						if block.settings.text_alignment == 'left'
+							assign text_alignment = 'start'
+						elsif block.settings.text_alignment == 'right'
+							assign text_alignment = 'end'
+						endif
+
+						if forloop.first == true and section.settings.above_fold_hero == true
+							assign lazyloading_style = 'eager'
+							assign fetch_priority = true
+						else
+							assign lazyloading_style = 'lazy'
+							assign fetch_priority = false
+						endif
+	
+						render 'responsive-bg-image' image: block.settings.slider_image, image_mobile: block.settings.slider_image_mobile, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority
+					-%}
+					{%- if section.settings.hero_overlay_color != blank -%}<div class="overlay" style="background-color: {{ section.settings.hero_overlay_color }}; opacity: {{ section.settings.range_opacity | divided_by: 100.0 }};"></div>{%- endif -%}
+					<div class="carousel-caption anim-hero-header h-100 d-flex flex-column justify-content-center text-{{ text_alignment }}" data-slider-caption>
+					{%- if block.settings.hero_heading != blank -%}
+						{%- if forloop.first == true -%}	
+						<h1>{{ block.settings.hero_heading }}</h1>
+						{%- else -%}
+						<h2>{{ block.settings.hero_heading }}</h2>
+						{%- endif -%}
+					{%- endif -%}
+					{%- if block.settings.hero_sub_heading != blank -%}<p class="subtitle pb-3 h4">{{ block.settings.hero_sub_heading }}</p>{%- endif -%}
+					{%- if block.settings.hero_caption != blank -%}<p>{{ block.settings.hero_caption }}</p>{%- endif -%}
+					{%- if block.settings.hero_btn_text != blank and block.settings.hero_btn_link != blank -%}
+						<a class="btn btn-secondary d-inline-block align-self-{{ text_alignment }}" href="{{ block.settings.hero_btn_link }}" title="{{ block.settings.hero_btn_text }}">{{ block.settings.hero_btn_text }}</a>
+					{%- endif -%}
+					</div>
+				</div>
+				<span class="image-preloader"></span>
+			{%- endfor -%}
+		</div>
+	{%- endif -%}
+	{%- if section.blocks.size > 1 -%}
+	<button class="carousel-control-prev" type="button" data-bs-target="#heroSliderBootstrap{{ section.id }}" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#heroSliderBootstrap{{ section.id }}" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+	{%- endif -%}
+</div>
+
+{% schema %}
+{
+	"name": "Hero Slider Simple",
+	"class": "section-hero-slider-simple",
+	"tag": "section",
+	"max_blocks": 6,
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "above_fold_hero",
+			"label": "Above the Fold Hero",
+			"info": "IMPORTANT for performance/SEO, only tick if visible above the fold",
+			"default": false
+		},
+		{
+			"type": "select",
+			"id": "height",
+			"label": "Banner Height",
+			"options": [
+				{
+					"value": "531px",
+					"label": "531px"
+				},
+				{
+					"value": "674px",
+					"label": "674px"
+				},
+				{
+					"value": "700px",
+					"label": "700px"
+				},
+				{
+					"value": "786px",
+					"label": "786px"
+				},
+				{
+					"value": "928px",
+					"label": "928px"
+				},
+				{
+					"value": "100vh",
+					"label": "Full Height"
+				},
+				{
+					"value": "auto",
+					"label": "Natural"
+				}
+			],
+			"default": "786px"
+		},
+		{
+			"type": "select",
+			"id": "height_mobile",
+			"label": "Banner Height (mobile)",
+			"options": [
+				{
+					"value": "260px",
+					"label": "260px"
+				},
+				{
+					"value": "375px",
+					"label": "375px"
+				},
+				{
+					"value": "425px",
+					"label": "420px"
+				},
+				{
+					"value": "768px",
+					"label": "768px"
+				},
+				{
+					"value": "100vh",
+					"label": "Full Height"
+				},
+				{
+					"value": "auto",
+					"label": "Natural"
+				}
+			],
+			"default": "375px"
+		},
+		{
+			"type": "color",
+			"id": "hero_overlay_color",
+			"label": "Hero Overlay Color"
+		},
+		{
+			"type": "range",
+			"id": "range_opacity",
+			"min": 0,
+			"max": 100,
+			"step": 10,
+			"unit": "%",
+			"label": "Opacity",
+			"default": 20
+		}
+	],
+	"blocks": [
+		{
+			"name": "Slider Image",
+			"type": "image",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "slider_image",
+					"label": "Slider Image"
+				},
+				{
+					"type": "image_picker",
+					"id": "slider_image_mobile",
+					"label": "Mobile Slider Image"
+				},
+				{
+					"type": "text_alignment",
+					"id": "text_alignment",
+					"label": "Text alignment",
+					"default": "center"
+				},
+				{
+					"type": "text",
+					"id": "hero_heading",
+					"label": "Hero Heading",
+					"default": "Image Slide"
+				},
+				{
+					"type": "text",
+					"id": "hero_sub_heading",
+					"label": "Hero Subheading",
+					"default": "Tell your brand's story through images"
+				},
+				{
+					"type": "text",
+					"id": "hero_caption",
+					"label": "Hero Caption",
+					"default": "caption"
+				},
+				{
+					"type": "text",
+					"id": "hero_btn_text",
+					"label": "Banner Button Text",
+					"default": "Button label"
+				},
+				{
+					"type": "url",
+					"id": "hero_btn_link",
+					"label": "Banner Button Link",
+					"default": "/collections"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Hero Slider Simple",
+			"category": "Hero",
+			"blocks": [
+				{
+					"type": "image"
+				},
+				{
+					"type": "image"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

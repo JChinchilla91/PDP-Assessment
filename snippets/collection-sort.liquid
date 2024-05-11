@@ -1,0 +1,20 @@
+{%- comment -%}
+	Sorts order of products on collection page by adding URL parameters
+
+	Usage:
+	{%- render 'collection-sort' -%}
+
+{%- endcomment -%}
+{%-liquid
+	assign sort_by = collection.sort_by | default: collection.default_sort_by
+	assign unique_id = "now" | date: "%N" | modulo: 100
+-%}
+<div class="d-flex flex-row-reverse">
+	<input type="hidden" value="{{ collection.default_sort_by }}" data-filter-default-sort>	
+	<label for="sortBy{{ unique_id }}" class="visually-hidden">Sort by:</label>
+	<select name="sort_by" id="sortBy{{ unique_id }}" class="form-select">
+		{%- for option in collection.sort_options -%}
+		<option value="{{ option.value }}"{% if sort_by == option.value %} selected{% endif %}>{{ option.name }}</option>
+		{%- endfor -%}
+	</select>
+</div>

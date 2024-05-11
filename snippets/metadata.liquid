@@ -1,0 +1,127 @@
+{%- comment -%}
+	Renders metadata that will render in the <head> of the website
+	
+	Usage:
+	{%- render 'metadata' -%}
+
+{%- endcomment -%}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{{ settings.theme_light_color }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ settings.theme_dark_color }}" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="dns-prefetch" href="//cdn.shopify.com">
+<link rel="dns-prefetch" href="//v.shopify.com">
+{%- if shop.brand.favicon_url != blank -%}
+	<link rel="icon" sizes="32x32" href="{{ shop.brand.favicon_url }}" type="image/png">
+{%- elsif settings.favicon != blank -%}
+	<link rel="icon" sizes="32x32" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png">
+{%- endif -%}
+{%- capture seo_title -%}{{ page_title }}{%- if current_tags -%}{%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}{%- endif -%}
+{%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{%- endif -%}
+{%- unless page_title contains shop.name %} &ndash; {{ shop.name }} {%- endunless -%}
+{%- endcapture -%}
+{%- if gift_card -%}
+{%- assign formatted_balance = gift_card.balance | money_without_trailing_zeros | strip_html -%}
+<title>{{ 'gift_cards.issued.title' | t: value: formatted_balance, shop: shop.name }}</title>
+{%- else -%}
+<title>{{ seo_title }}</title>
+{%- endif -%}
+{%- if page_description -%}
+	<meta name="description" content="{{ page_description | escape }}">
+{%- elsif collection and collection.description != blank -%}
+	<meta name="description" content="{{ collection.description | escape }}">
+{%- elsif product and product.description != blank -%}
+	<meta name="description" content="{{ product.description | escape }}">
+{%- elsif gift_card -%}
+	<meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
+{%- else -%}
+	<meta name="description" content="{{ shop.brand.short_description | default: shop.name | escape }}">
+{%- endif -%}
+{%- render 'social-meta-tags' -%}
+{%- if template contains "product" -%}<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "Product",
+	"name": "{{ product.title | escape }}",
+	"brand": "{{ product.vendor | escape }}",
+	"image": "{{ product.featured_media.preview_image | image_url: width: 2048 }}",
+	"url": "{{ shop.url }}{{ product.url }}",
+	"offers": {
+		"@type": "AggregateOffer",
+		"priceCurrency": "{{ shop.currency }}",
+		"lowPrice": "{{ product.price_min | money | remove: '$' }}",
+		"highPrice": "{{ product.price_max | money | remove: '$' }}",
+		"itemCondition": "http://schema.org/New",
+		"availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+		"offerCount": "{{ product.variants.size }}",
+		"offers": [
+			{%- for variant in product.variants -%}
+				{
+					"@type": "Offer",
+					"name": "{{ product.title }} — {{ variant.title | escape }}",
+					"availability": "http://schema.org/{%- if variant.available -%}InStock{%- else -%}OutOfStock{%- endif -%}",
+					"priceCurrency": "{{ shop.currency }}",
+					"price": "{%- if variant.compare_at_price > 0 -%}{{ variant.compare_at_price | money | remove: '$' }}{%- else -%}{{ variant.price | money | remove: '$' }}{%- endif -%}"
+				}{%- unless forloop.last -%},{%- endunless -%}
+			{%- endfor -%}
+		]
+	}
+}
+</script>
+{%- elsif template contains "blog" -%}<script type="application/ld+json">
+	{	
+		"@context": "http://schema.org",
+		"@type": "Blog",
+		"name": "{{ blog.title }}",
+		"url": "{{ blog.url }}",
+		"description": "{{ blog.tags }}",
+		"publisher": {
+			"@type": "Organization",
+			"name": "{{ shop.address.company }}"
+		}	
+	}
+	</script>
+{%- elsif template contains "article" -%}<script type="application/ld+json">
+	{	
+		"@type": "BlogPosting",
+		"mainEntityOfPage": "{{ article.url }}",
+		"articleSection": {{ blog.title | json }},
+		"keywords": "{{ article.tags | join: ', ' }}",
+		"headline": {{ article.title | json }},
+		"description": {{ article.excerpt_or_content | strip_html | truncatewords: 25 | json }},
+		"dateCreated": "{{ article.created_at | date: '%Y-%m-%dT%T' }}",
+		"datePublished": "{{ article.published_at | date: '%Y-%m-%dT%T' }}",
+		"dateModified": "{{ article.published_at | date: '%Y-%m-%dT%T' }}",
+		"image": {
+		"@type": "ImageObject",
+		"url": "https:{{ article.image | image_url: width: 1024 }}",
+		"image": "https:{{ article.image | image_url: width: 1024 }}",
+		"name": {{ article.image.alt | json }},
+		"width": "1024",
+		"height": "1024"
+		},
+		"author": {
+		"@type": "Person",
+		"name": "{{ article.user.first_name | escape }} {{ article.user.last_name | escape }}",
+		"givenName": {{ article.user.first_name | json }},
+		"familyName": {{ article.user.last_name | json }}
+		},
+		"publisher": {
+		"@type": "Organization",
+		"name": {{ shop.address.company | json }}
+		},
+		"commentCount": {{ article.comments_count }},
+		"comment": [
+		{%- for comment in article.comments limit: 5 -%}
+			{
+			"@type": "Comment",
+			"author": {{ comment.author | json }},
+			"datePublished": "{{ comment.created_at | date: '%Y-%m-%dT%T' }}",
+			"text": {{ comment.content | json }}
+			}{%- unless forloop.last -%},{%- endunless -%}
+		{%- endfor -%}
+		]
+	}
+	</script>
+{%- endif -%}

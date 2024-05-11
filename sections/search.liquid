@@ -1,0 +1,43 @@
+{%- assign limit_by = settings.search_limit_by -%}
+{%- paginate search.results by limit_by -%}
+<div class="container">
+	<div class="row">
+		<div class="col pt-3 text-center">
+			<h1 class="h2">{%- if search.performed -%}
+				<span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>{{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+			{%- else -%}
+				{{ 'general.search.title' | t }}
+			{%- endif -%}</h1>
+		</div>
+	</div>
+	<!-- search form -->
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-5">
+			<form action="/search" method="get" role="search" data-needs-validation="true" novalidate="true">
+				<input type="hidden" name="type" value="product">
+				<label for="Search" class="visually-hidden">{{ 'general.search.placeholder' | t }}</label>
+				<div class="input-group">
+					<input type="search" class="form-control" name="q" id="Search" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" required>
+					<button type="submit" class="input-group-text"><span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span></button>
+					<div class="invalid-feedback">Please fill out this field</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Results -->
+	<div class="row pt-5">		
+		{%- if search.performed -%}
+			{%- if search.results_count == 0 -%}
+				<div class="col text-center">
+					<p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+				</div>
+			{%- else -%}
+				<h2 class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}</h2>
+				{%- for item in search.results -%}
+					{%- render 'product-grid', product: item, classes: 'px-3', col_sm: 2, col_md: 3, col_lg: 4 -%}
+				{%- endfor -%}
+			{%- endif -%}
+		{%- endif -%}
+	</div>
+</div>
+{%- endpaginate -%}

@@ -1,0 +1,26 @@
+<script src="{{ 'proxy.js' | asset_url }}" defer="defer" crossorigin="anonymous"></script>
+<div class="container py-5 mb-5">
+	<div class="row text-center pt-4">
+		<div class="col-12">
+			<h1>{{ page.title }}</h1>
+		</div>
+		<div class="col-12 mb-5">{{ page.content }}</div>
+	</div>
+	<div class="row text-center py-5 mb-5">
+		<div class="col-6" id="jsonTest">JSON Test - Shop ID: pending...</div>
+		<div class="col-6" id="liquidTest">LIQUID Test - Shop ID: pending...</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "Page Proxy",
+  "class": "section-page section-page-proxy",
+  "tag": "section",
+  "blocks": [
+	{
+	  "type": "@app"
+	}
+  ]
+}
+{% endschema %}

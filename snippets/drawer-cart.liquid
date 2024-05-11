@@ -1,0 +1,36 @@
+{%- comment -%}
+	Renders drawer cart
+
+	Usage:
+	- {%- render 'drawer-cart' -%}
+	
+{%- endcomment -%}
+<div class="offcanvas offcanvas-end drawer-cart" tabindex="-1" id="drawerCart" aria-labelledby="drawerCartLabel">
+	<div class="h-100 d-flex flex-column align-items-end" data-inner-drawer>
+		<div class="header-wrapper d-flex justify-content-between">
+			<h4 class="ps-3" id="drawerCartLabel">Cart (<span class="count" data-cart-count="{{ cart.item_count }}">{{ cart.item_count | default: 0 }}</span>)</h4>
+			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="items-wrapper position-relative off" data-drawer-cart-items data-dynamic-qty>
+			{%- render 'drawer-cart-items' -%}
+
+			{%- comment -%} Loader {%- endcomment -%}
+			<div class="loading-wrapper w-100 h-100 bg-white" data-drawer-loading>
+				<div>Loading</div>
+				<span class="image-preloader"></span>
+			</div>
+		</div>
+		{%- if cart.item_count > 0 -%}
+		<div class="clear-cart text-center py-5 w-100">
+			<a href="#" data-clear-cart>Clear Your Cart</a>
+		</div>
+		{%- endif -%}
+		<div class="footer-wrapper mt-auto text-center">
+			<div class="subtotal-wrapper">
+				<div class="total-title">Subtotal</div>
+				<div class="total-price"><span data-drawer-cart-total="{{ cart.total_price }}">{{ cart.total_price | money }}</span></div>
+			</div>
+			<a href="/cart" title={{ settings.checkout_btn_copy }} class="btn btn-primary mx-auto" data-checkout>{{ settings.checkout_btn_copy }}</a>
+		</div>
+	</div>
+</div>

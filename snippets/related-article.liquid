@@ -1,0 +1,46 @@
+{%- comment -%}
+	Renders a related article based on the tags of the current article page
+	
+	Usage:
+	{%- render 'related-article' -%}
+
+{%- endcomment -%}
+<section class="blog">
+	<hr>
+	<!-- Indicator for exiting out of nested loop once we find a single related article -->
+	{%- liquid
+		assign break_loop = false
+	-%}
+	{%- for tag in article.tags -%}
+		{%- for relArticle in blog.articles -%}
+			{%- unless relArticle.id == article.id -%}
+				{%- if relArticle.tags contains tag -%}
+					<h2 class="text-center h1 my-4 my-md-5">Related Article</h2>
+					<article class="row justify-content-center align-items-center mb-5">
+						<!-- Article Image -->
+						{%- if relArticle.image == blank -%}
+							<div class="col-12 px-lg-0">
+								{%- render 'article-description', article: relArticle -%}
+							</div>
+						{%- else -%}
+							<!-- Article Info -->
+							<div class="col-12 col-lg-5 mt-0 px-lg-0">
+								<a href="{{ relArticle.url }}" title="{{ relArticle.title }}" class="text-decoration-none">
+									{%- render 'responsive-bg-image', image: relArticle.image -%}
+								</a>
+							</div>
+							<div class="col-12 col-lg-6 offset-lg-1 px-lg-0">
+								{%- render 'article-description', article: relArticle -%}
+							</div>
+						{%- endif -%}
+					</article>
+					{%- break -%}
+					{%- assign break_loop = true -%}  
+				{%- endif -%}
+			{%- endunless -%}
+		{%- endfor -%}
+		{%- if break_loop -%}
+			{%- break -%}
+		{%- endif -%}
+	{%- endfor -%}
+</section>

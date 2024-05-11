@@ -1,0 +1,35 @@
+{%- render 'breadcrumb' -%}
+<section class="blog container">
+	<h1 class="text-center my-5">{{ blog.title }}</h1>
+	{%- paginate blog.articles by settings.articles_per_page -%}
+		{%- for article in blog.articles -%}
+			<article class="row justify-content-center align-items-center my-5">
+				<!-- Article Image -->
+				{%- if article.image == blank -%}
+					<div class="col-12 px-lg-0">
+						{%- render 'article-description', article: article -%}
+					</div>
+				{%- else -%}
+					<!-- Article Info -->
+					<div class="col-12 col-lg-5 mt-0 px-lg-0">
+						<a href="{{ article.url }}" title="{{ article.title }}" class="text-decoration-none"> {%- render 'responsive-bg-image', image: article.image -%}</a>
+					</div>
+					<div class="col-12 col-lg-6 offset-lg-1 px-lg-0">
+						{%- render 'article-description', article: article -%}
+					</div>
+				{%- endif -%}
+			</article>
+			{%- unless forloop.last -%}<hr>{%- endunless -%}
+		{%- endfor %}
+		{%- if paginate.previous.is_link -%}
+			<div class="py-4">
+				<a href="{{ paginate.previous.url }}" title="Prev">Prev</a>
+			</div>
+		{%- endif -%}
+		{%- if paginate.next.is_link -%}
+			<div class="text-end py-4">
+				<a class="text-center" href="{{ paginate.next.url }}" title="Next">Next</a>
+			</div>
+		{%- endif -%}
+	{%- endpaginate -%} 
+</section>

@@ -1,0 +1,73 @@
+{%- comment -%}
+	Renders social list of social media icons from Shopify Brand
+	
+	Usage:
+	{%- render 'social-media' -%}
+
+{%- endcomment -%}
+<ul class="list-group list-group-horizontal justify-content-center justify-content-lg-start flex-wrap social-media-list">
+	{%- if shop.brand.metafields.social_links.instagram.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.instagram.value }}" title="Follow us on Instagram" target="_blank">
+			{% render 'icons' with 'instagram' %}            
+			<span class="visually-hidden">Follow us on Instagram</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.facebook.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.facebook.value }}" title="Follow us on Facebook" target="_blank">
+			{% render 'icons' with 'facebook' %}            
+			<span class="visually-hidden">Follow us on Facebook</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.twitter.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.twitter.value }}" title="Follow us on Twitter" target="_blank">
+			{% render 'icons' with 'twitter' %}
+			<span class="visually-hidden">Follow us on Twitter</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.pinterest.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.pinterest.value }}" title="Follow us on Pinterest" target="_blank">
+			{% render 'icons' with 'pinterest' %}
+			<span class="visually-hidden">Follow us on Pinterest</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.snapchat.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.snapchat.value }}" title="Follow us on Snapchat" target="_blank">
+			{% render 'icons' with 'snapchat' %}
+			<span class="visually-hidden">Follow us on Snapchat</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.tiktok.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon d-block mb-2" href="{{ shop.brand.metafields.social_links.tiktok.value }}" title="Follow us on Tiktok" target="_blank">
+			{% render 'icons' with 'tiktok' %}
+			<span class="visually-hidden">Follow us on tiktok</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.youtube.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon" href="{{ shop.brand.metafields.social_links.youtube.value }}" title="Follow us on Youtube" target="_blank">
+			{% render 'icons' with 'youtube' %}
+			<span class="visually-hidden">Follow us on Youtube</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.vimeo.value != blank -%}
+	<li class="list-group-item px-2">
+		<a class="sm-icon" href="{{ shop.brand.metafields.social_links.vimeo.value }}" title="Follow us on Vimeo" target="_blank">
+			{% render 'icons' with 'vimeo' %}
+			<span class="visually-hidden">Follow us on Vimeo</span>
+		</a>
+	</li>
+	{%- endif -%}
+</ul>

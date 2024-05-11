@@ -1,0 +1,233 @@
+{%- comment -%}
+	Renders facets (filtering and sorting)
+	Needs MDB 5 PRO for price multi range
+
+	Accepts:
+	- results: {Object} Collection or Search object
+	- enable_filtering: {Boolean} Show filtering when true
+	- enable_sorting: {Boolean} Show sorting when true
+	- device: {String} mobile | desktop
+
+	Usage:
+	{%- render 'facets', results: collection, enable_filtering: true, enable_sorting: true -%}
+
+	IMPORTANT: ID in the document are only used for Desktop code - Mobile will be targeting with data-attributes only
+	
+{%- endcomment -%}
+{%- if enable_filtering == true or results.filters != empty -%}	
+	{%- comment -%} Get the filter Data in JSON for faster JS manipulation {%- endcomment -%}
+	<script type="application/json" id="facetsData">[
+		{%- for filter in results.filters -%}
+			{%- assign lastFilter = forloop.last -%}
+			{%- for value in filter.values -%}
+				{"name":"{{ filter.label | handleize }}_{{ forloop.index }}","count":{{ value.count }}}{%- unless lastFilter and forloop.last -%},{%- endunless -%}	
+			{%- endfor -%}
+			{%- case filter.type -%}
+				{%- when 'price_range' -%}
+				{%- liquid 
+					assign gte_value = filter.min_value.value | divided_by: 100 | strip_html | escape
+					assign lte_value = filter.max_value.value | divided_by: 100 | strip_html | escape	
+				-%}
+				{"name": "{{ filter.min_value.param_name | handleize }}", "value": {{ gte_value }}},
+				{"name": "{{ filter.max_value.param_name | handleize }}", "value": {{ lte_value }}},
+			{%- endcase -%}
+		{%- endfor -%}
+	]</script>
+	{%- liquid
+		assign sort_by = results.sort_by | default: results.default_sort_by
+		assign total_active_values = 0
+		if results.url
+			assign results_url = results.url
+		else
+			assign terms = results.terms | escape
+			assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+		endif
+	-%}
+	{%- comment -%} For search results {%- endcomment -%}
+	{%- if results.terms -%}
+		<input type="hidden" name="q" value="{{ results.terms | escape }}">
+		<input name="options[prefix]" type="hidden" value="last">
+	{%- endif -%}
+	{%- if results.current_vendor or results.current_type -%}
+		<input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+	{%- endif -%}
+	<div class="container facets">
+		<div class="row">
+			<div class="col-12 col-lg-auto d-none d-lg-block">
+				<h2>{{ 'products.facets.filter_by_label' | t }}</h2>
+			</div>
+			{%- for filter in results.filters -%}
+				{%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+				{%- case filter.type -%}
+					{%- when 'boolean' or 'list' -%}
+					<div class="col-12 col-lg-auto">
+						{%- if device == 'mobile' -%}
+							<!-- Mobile -->
+							<button class="btn btn-primary mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ filter.label | camelcase }}" aria-expanded="false" aria-controls="collapse{{ filter.label | camelcase }}">{{ filter.label }}</button>
+							<div class="collapse" id="collapse{{ filter.label | camelcase }}">
+								<div class="card card-body mb-3">
+									<ul class="list-group">
+										<li class="list-group-item d-flex justify-content-between dropdown-header">
+											<span>{{ 'products.facets.filters_selected' | t: count: filter.active_values.size }}</span>
+											<a href="{{ filter.url_to_remove }}" title="{{ 'products.facets.reset' | t }}">{{ 'products.facets.reset' | t }}</a>
+										</li>
+										{%- for value in filter.values -%}
+											<li class="list-group-item">
+												<div class="py-1">
+													{%- comment -%} We rely on data-facet-input in JS {%- endcomment -%}
+													<input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" class="form-check-input" data-facet-input="{{ filter.label | handleize }}_{{ forloop.index }}" id="filter{{ filter.label | escape | camelcase }}_mob_{{ forloop.index }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+													<label class="form-check-label" for="filter{{ filter.label | escape | camelcase }}_mob_{{ forloop.index }}">{{ value.label | escape }} (<span>{{ value.count }}</span>)</label>
+												</div>
+											</li>
+										{%- endfor -%}
+									</ul>
+								</div>
+							</div>
+						{%- endif -%}
+						{%- if device == 'desktop' -%}
+							<!-- Desktop -->
+							<div class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" id="dropdown{{ filter.label | camelcase }}" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ filter.label }}</button>
+								<ul class="dropdown-menu" aria-labelledby="dropdown{{ filter.label | camelcase }}">
+									<li class="px-3 py-1 d-flex justify-content-between dropdown-header">
+										<span>{{ 'products.facets.filters_selected' | t: count: filter.active_values.size }}</span>
+										<a href="{{ filter.url_to_remove }}" title="{{ 'products.facets.reset' | t }}">{{ 'products.facets.reset' | t }}</a>
+									</li>
+									<li><hr class="dropdown-divider"></li>
+									{%- for value in filter.values -%}
+										<li class="form-check">
+											<div class="px-3 py-1">
+												{%- comment -%} We rely on data-facet-input in JS {%- endcomment -%}
+												<input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" class="form-check-input" data-facet-input="{{ filter.label | handleize }}_{{ forloop.index }}" id="filter{{ filter.label | escape | camelcase }}_{{ forloop.index }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+												<label class="form-check-label" for="filter{{ filter.label | escape | camelcase }}_{{ forloop.index }}">{{ value.label | escape }} (<span>{{ value.count }}</span>)</label>
+											</div>
+										</li>
+									{%- endfor -%}
+								</ul>
+							</div>
+						{%- endif -%}
+					</div>
+					{%- comment -%} Price Ranges {%- endcomment -%}
+					{%- when 'price_range' -%}
+					{%- liquid
+						assign gte_value = filter.min_value.value | divided_by: 100 | strip_html | escape
+						assign lte_value = filter.max_value.value | divided_by: 100 | strip_html | escape
+						assign max_price_value = filter.range_max | divided_by: 100 | strip_html | escape
+						assign max_price_money = filter.range_max | money_without_trailing_zeros | strip_html | escape
+						unless filter.min_value.value
+							assign gte_value = 0
+						endunless
+						unless filter.max_value.value
+							assign lte_value = max_price_value
+						endunless
+					-%}
+					{%- if device == 'mobile' -%}
+						<!-- Mobile Price Ranges -->
+						<div class="col-12">
+							<button class="btn btn-primary mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ filter.label | camelcase }}" aria-expanded="false" aria-controls="collapse{{ filter.label | camelcase }}">{{ filter.label }}</button>
+							<div class="collapse" id="collapse{{ filter.label | camelcase }}">
+								<div class="card card-body mb-3">
+									<ul class="list-group">
+										<li class="list-group-item d-flex justify-content-between dropdown-header">
+											<span class="pe-3">{{ "products.facets.max_price" | t: price: max_price_money }}</span>
+											<a href="{{ filter.url_to_remove }}" title="{{ 'products.facets.reset' | t }}">{{ 'products.facets.reset' | t }}</a>
+										</li>
+										<li class="list-group-item">
+											<div class="row">
+												<div class="col-6 d-flex ps-3 py-1">
+													<label class="form-label col-form-label pe-2" for="filter{{ filter.label | escape | camelcase }}_mob_gte">{{ cart.currency.symbol }}</label>
+													<input type="number" name="{{ filter.min_value.param_name }}" value="{{ gte_value }}" class="form-control" data-facet-input="{{ filter.min_value.param_name | handleize }}" placeholder="{{ 'products.facets.from' | t }}" id="filter{{ filter.label | escape | camelcase }}_mob_gte">
+												</div>
+												<div class="col-6 d-flex pe-3 py-1">
+													<label class="form-label col-form-label pe-2" for="filter{{ filter.label | escape | camelcase }}_mob_lte">{{ cart.currency.symbol }}</label>
+													<input type="number" name="{{ filter.max_value.param_name }}" value="{{ lte_value }}" class="form-control" data-max-range="{{ max_price_value }}" data-facet-input="{{ filter.max_value.param_name | handleize }}" placeholder="{{ 'products.facets.to' | t }}" id="filter{{ filter.label | escape | camelcase }}_mob_lte">
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					{%- endif -%}	
+					{%- if device == 'desktop' -%}
+						<!-- Desktop Price Ranges -->
+						<div class="col-lg-auto">
+							<div class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" id="dropdown{{ filter.label | camelcase }}" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ filter.label }}</button>
+								<ul class="dropdown-menu" aria-labelledby="dropdown{{ filter.label | camelcase }}">
+									<li class="px-3 py-1 d-flex justify-content-between dropdown-header">
+										<span class="pe-3">{{ "products.facets.max_price" | t: price: max_price_money }}</span>
+										<a href="{{ filter.url_to_remove }}" title="{{ 'products.facets.reset' | t }}">{{ 'products.facets.reset' | t }}</a>
+									</li>
+									<li><hr class="dropdown-divider"></li>
+									<li class="row">
+										<div class="col-6 d-flex px-3 py-1">
+											<label class="form-label col-form-label pe-2" for="filter{{ filter.label | escape | camelcase }}_gte">{{ cart.currency.symbol }} </label>
+											<input type="number" name="{{ filter.min_value.param_name }}" value="{{ gte_value }}" class="form-control" data-facet-input="{{ filter.min_value.param_name | handleize }}" placeholder="{{ cart.currency.symbol }}" id="filter{{ filter.label | escape | camelcase }}_gte">
+										</div>
+										<div class="col-6 d-flex px-3 py-1">
+											<label class="form-label col-form-label pe-2" for="filter{{ filter.label | escape | camelcase }}_lte">{{ cart.currency.symbol }} </label>
+											<input type="number" name="{{ filter.max_value.param_name }}" value="{{ lte_value }}" class="form-control" data-max-range="{{ max_price_value }}" data-facet-input="{{ filter.max_value.param_name | handleize }}" placeholder="{{ cart.currency.symbol }}" id="filter{{ filter.label | escape | camelcase }}_lte">
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					{%- endif -%}
+				{%- endcase -%}
+			{%- endfor -%}
+			{%- comment -%} Sorting {%- endcomment -%}
+			{%- if enable_sorting == true -%}
+				<div class="col-12 col-lg">
+					{%- render 'collection-sort' -%}
+				</div>
+			{%- endif -%}
+			<div class="col-12 col-lg d-flex align-items-center justify-content-center justify-content-lg-end py-3 py-lg-0">
+				 <a href="{{ results_url }}" title="{{ 'products.facets.clear_all' | t }}" class="mb-2">
+					 <span>{{ 'products.facets.clear_all' | t }}</span>
+				</a>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-12 col-lg-auto d-flex align-items-center justify-content-center justify-content-lg-start mb-3 mb-lg-0">
+				<span id="productCount" data-product-count>
+					{%- if results.results_count -%}
+						{{ 'general.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+					{%- elsif results.products_count == results.all_products_count -%}
+						{{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+					{%- else -%}
+						{{ 'products.facets.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+					{%- endif -%}
+				</span>
+			</div>
+			{%- comment -%} Filter Tags {%- endcomment -%}
+			<div class="col-12 col-lg">
+				<span class="d-block text-center d-lg-inline" data-facet-tags>
+					{%- for filter in results.filters -%}
+						{%- if filter.type == 'price_range' -%}
+							{%- if filter.min_value != nil and filter.min_value.value != blank and filter.min_value.value > 0 or filter.max_value.value != filter.range_max -%}
+								<a href="{{ filter.url_to_remove }}" role="button" class="btn btn-primary rounded-pill me-2 mb-2" data-facet-remove>
+									{{ filter.min_value.value | money_without_trailing_zeros }} 
+									{%- if filter.max_value != nil and filter.max_value.value != blank and filter.max_value.value > 0 -%}
+										- {{ filter.max_value.value | money_without_trailing_zeros }}
+									{%- endif -%}
+									<span class="badge px-1 ms-2">&#10005;</small>
+										<span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+									</span>
+								</a>
+							{%- endif -%}
+						{%- else-%}
+							{%- for value in filter.active_values -%}
+								<a href="{{ value.url_to_remove }}" role="button" class="btn btn-primary rounded-pill me-2 mb-2" title="{{ value.label | escape }}" data-facet-remove>{{ value.label | escape }}
+									<span class="badge px-1 ms-2">&#10005;</small>
+										<span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+									</span>
+								</a>
+							{%- endfor -%}
+						{%- endif -%}
+					{%- endfor -%}
+				</span>
+			</div>
+		</div>
+	</div>
+{%- endif -%}

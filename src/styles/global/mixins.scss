@@ -1,0 +1,139 @@
+/*================ Mixins ================*/
+@mixin clearfix() {
+  &::after {
+	content: '';
+	display: table;
+	clear: both;
+  }
+
+  // sass-lint:disable
+  *zoom: 1;
+}
+
+/*============================================================================
+  Prefix mixin for generating vendor prefixes.
+  Based on https://github.com/thoughtbot/bourbon/blob/v4-stable/app/assets/stylesheets/addons/_prefixer.scss
+
+  Usage:
+	// Input:
+	.element {
+	  @include prefix(transform, scale(1), ms moz webkit spec);
+	}
+
+	// Output:
+	.element {
+	  -ms-transform: scale(1);
+	  -webkit-transform: scale(1);
+	  transform: scale(1);
+	}
+==============================================================================*/
+@mixin prefix($property, $value, $prefixes) {
+  @each $prefix in $prefixes {
+	@if $prefix == webkit {
+	  -webkit-#{$property}: $value;
+	} @else if $prefix == moz {
+	  -moz-#{$property}: $value;
+	} @else if $prefix == ms {
+	  -ms-#{$property}: $value;
+	} @else if $prefix == o {
+	  -o-#{$property}: $value;
+	} @else if $prefix == spec {
+	  #{$property}: $value;
+	} @else  {
+	  @warn 'Unrecognized prefix: #{$prefix}';
+	}
+  }
+}
+
+@mixin transition($transition...) {
+	@include prefix(transition, $transition, moz ms webkit spec);
+}
+@mixin transform($transform...) {
+	@include prefix('transform', $transform, moz ms webkit spec);
+}
+
+/*================ Media Query Mixin ================*/
+@mixin break($device) {
+	@media screen and (min-width: $device) {
+		@content;
+	}
+}
+
+/*================ Menu columns Mixin ================*/
+@mixin menu-col () {
+	@for $i from 1 through $grid-menu-columns {
+		.col-menu-#{$i} {
+			@include make-menu-col($i);
+		}
+	}
+}
+@mixin make-menu-col($size) {
+	flex: 0 0 percentage(1 / $size);
+	max-width: percentage(1 / $size);
+}
+
+/*================ Responsive Text Alignment Helper ================*/
+@mixin visually-hidden() {
+  // sass-lint:disable no-important
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+
+@mixin visually-shown($position: inherit) {
+  // sass-lint:disable no-important
+  position: $position !important;
+  overflow: auto;
+  clip: auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+/*================ Hover ================*/
+@mixin hover {
+  &:hover { @content; }
+}
+
+@mixin hover-focus {
+  &:hover,
+  &:focus {
+	@content;
+  }
+}
+
+/*================ PLACEHOLDERS ================*/
+$placeholders: '-webkit-input-placeholder',
+			   '-moz-placeholder',
+			   '-ms-input-placeholder';
+
+@mixin placeholder {
+  @each $placeholder in $placeholders {
+	@if $placeholder == "-webkit-input-placeholder" {
+	  &::#{$placeholder} {
+		@content;
+	  }
+	}
+	@else if $placeholder == "-moz-placeholder" {
+	  // FF 18-
+	  &:#{$placeholder} {
+		@content;
+	  }
+
+	  // FF 19+
+	  &::#{$placeholder} {
+		@content;
+	  }
+	}
+	@else {
+	  &:#{$placeholder} {
+		@content;
+	  }
+	}
+  }
+}

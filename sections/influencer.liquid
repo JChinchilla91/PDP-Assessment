@@ -1,0 +1,34 @@
+<div class="container">
+	<div class="row">
+		<div class="col-12 col-lg-4">
+			{%- if section.settings.photo != blank -%}
+				{%- render 'responsive-image', image: section.settings.photo, image_class: 'img-fluid' -%}
+			{%- endif -%}
+		</div>
+		<div class="col-12 col-lg-8">
+			{%- if section.settings.name != blank -%}
+				<h2>{{ section.settings.name }}</h2>
+			{%- endif -%}
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Influencer",
+	"class": "section-influencer",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "photo",
+			"label": "Photo"
+		},
+		{
+			"type": "text",
+			"id": "name",
+			"label": "Name"
+		}
+	]
+}
+{% endschema %}

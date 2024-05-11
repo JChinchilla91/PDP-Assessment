@@ -1,0 +1,83 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'login.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<section class="customers" data-section-id="{{ section.id }}" data-section-type="login">
+	<div class="container">
+		<div class="row" data-login-form>
+			{%- if shop.checkout.guest_login -%}
+			<div class="row">
+				<div class="col-12 col-md-6 offset-md-3 py-5 my-5">
+					<div class="card">
+						<div class="card-body">
+							<h2>{{ 'customer.login.guest_title' | t }}</h2>
+							{%- form 'guest_login' -%}
+							{{ form.errors | default_errors }}
+							<button type="submit" class="btn btn-primary w-100">{{ 'customer.login.guest_continue' | t }}</button>
+							{%- endform -%}
+						</div>
+					</div>
+				</div>
+			</div>
+			{%- else -%}
+			<div class="col-12 col-md-6 offset-md-3 py-5 my-5">
+				<div class="card">
+					<div class="card-body">
+						<div class="form-success d-none pb-3" data-reset-success>{{ 'customer.recover_password.success' | t }}</div>
+						<h1 class="h2 mb-4">{{ 'customer.login.title' | t }}</h1>
+						<div class="login-form">
+							{%- form 'customer_login', data-needs-validation: true, novalidate: true -%}
+							 <!-- add validation class -->
+							{{ form.errors | default_errors }}
+							<div class="input-group">
+								<label for="CustomerEmail" class="visually-hidden">{{ 'customer.login.email' | t }}</label>
+								<input type="email" name="customer[email]" id="CustomerEmail" class="form-control" placeholder="{{ 'customer.login.email' | t }}" required>
+								<div class="invalid-feedback">{{ 'customer.login.error_email' | t }}</div>
+							</div>
+							<div class="input-group">
+								<label for="CustomerPassword" class="visually-hidden">{{ 'customer.login.password' | t }}</label>
+								<input type="password" name="customer[password]" id="CustomerPassword" class="form-control" placeholder="{{ 'customer.login.password' | t }}" minlength="8" required>
+								<div class="invalid-feedback">{{ 'customer.login.error_password' | t }}</div>
+							</div>
+				
+							<div class="btn-wrapper">
+								<button type="submit" class="btn btn-primary w-100 my-2">{{ 'customer.login.sign_in' | t }}</button>
+							</div>
+				
+							<div class="pt-4 text-center">
+								<p><a href="/account/register" title="Account Register">{{ 'layout.customer.create_account' | t }}</a></p>
+								<p><a href="#recover" title="Account Recover" data-recover-toggle>{{ 'customer.login.forgot_password' | t }}</a></p>
+							</div>
+							{%- endform -%}
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+
+		<div class="row d-none" data-recover-form>
+			<div class="col-12 col-md-6 offset-md-3 py-5 my-5">
+				<div class="card">
+					<div class="card-body">
+						<p class="sub-heading">{{ 'customer.recover_password.subtext' | t }}</p>
+						<h2 class="heading mb-4">{{ 'customer.recover_password.title' | t }}</h2>
+						{%- form 'recover_customer_password', data-needs-validation: true, novalidate: true -%}
+						{{ form.errors | default_errors }}	
+						<div class="input-group">
+							<label for="RecoverEmail" class="visually-hidden">{{ 'customer.recover_password.email' | t }}</label>
+							<input type="email" name="email" id="RecoverEmail" class="form-control" placeholder="{{ 'customer.recover_password.email' | t }}" required>
+							<div class="invalid-feedback">{{ 'customer.login.error_email' | t }}</div>
+						</div>
+						{%- if form.posted_successfully? -%}
+							<span class="d-none" data-form-state></span>
+						{%- endif -%}
+						<button type="submit" class="btn btn-primary w-100">{{ 'customer.recover_password.submit' | t }}</button>
+						<div class="pt-4 text-center">
+							<p class="text-center cancel-link"><a class="liner" title="Cancel" href="{{ 'customer.recover_password.cancel' | t }}" data-recover-toggle>{{ 'customer.recover_password.cancel' | t }}</a></p>
+						</div>
+						{%- endform -%}
+					</div>
+				</div>
+			</div>
+		</div>
+		{%- endif -%}
+	</div><!-- / .container -->
+</section>

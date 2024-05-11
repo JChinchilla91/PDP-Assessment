@@ -1,0 +1,39 @@
+{% layout 'gift_card' %}
+<div class="container">
+	<div class="row align-items-center justify-content-center mt-2 mb-4">
+		<div class="col">
+			{%- if settings.gift_card_company_logo != blank -%}
+				{%- render 'responsive-image', image: settings.gift_card_company_logo, image_class: 'gift-card__image' -%}
+			{%- else %}
+				<img class="gift-card__image" src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" height="{{ 570 | divided_by: 1.5 }}" width="570">
+			{%- endif %}
+		</div>
+	</div>
+	<div class="row align-items-center justify-content-center">
+		<div class="col">
+			<div class="copy-wrapper">
+				<h2>{{ shop.name }}</h2>
+				<div>
+					<p>{{ 'gift_cards.issued.how_to_use_gift_card' | t }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row align-items-center justify-content-center">
+		<div class="col">
+			<p id="gift-card-code" class="h3">{{ gift_card.code | format_code }}</p>
+			<div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
+			{%- if gift_card.pass_url -%}
+				<a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet no-print"><img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy"></a>
+			{%- endif -%}
+			<span class="gift-card__copy-success form__message" role="status"></span>
+			<template>
+				{{ 'gift_cards.issued.copy_code_success' | t }}
+			</template>
+			<div class="mt-3 d-flex flex-column align-items-center justify-content-center">
+				<button class="gift-card__copy-button btn btn-primary">{{ 'gift_cards.issued.copy_code' | t }}</button>
+				<a href="{{ shop.url }}" class="mt-2 button button--secondary" target="_blank" rel="noopener" aria-describedby="a11y-new-window-message">{{ 'gift_cards.issued.shop_link' | t }}</a>	
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+{%- comment -%}
+	Renders Quantity button controller
+
+	Accepts:
+	- item : item
+	- variant: item.variant
+	- context: {String} cart|drawer_cart
+
+	Usage:
+	{%- render 'quantity-buttons', item: item, variant: item.variant.id, context: 'cart' -%}
+{%- endcomment -%}
+
+{%- liquid
+	assign prepend_context = ''
+	assign input_name = 'qty[]'
+	assign key = item.key
+	assign input_key = key | prepend: prepend_context
+	
+	if context == 'cart'
+		assign prepend_context = 'updates_'
+		assign input_name = 'updates[]'
+		assign input_key = key | prepend: prepend_context
+	endif
+
+	if context == 'pdp'
+		assign prepend_context = 'updates_'
+		assign key = item.id
+		assign input_name = 'quantity'
+		assign input_key = 'Quantity'
+	endif
+-%}
+<div class="input-group qty-wrapper" data-qty-controls>
+	<button class="btn btn-outline-secondary" type="button" data-qty-change="minus" data-qty-target="{{ key | prepend: prepend_context }}"><span class="visually-hidden">minus</span>-</button>
+	<input class="form-control text-center mx-0" type="text" name="{{ input_name }}" id="{{ input_key }}" value="{{ item.quantity | default: 1 }}" aria-label="{{ 'cart.label.quantity' | t }}" data-variant-id="{{ variant.id }}" data-key="{{ key | prepend: prepend_context }}" data-original-qty="{{ item.quantity | default: 1 }}">
+	<button class="btn btn-outline-secondary" type="button" data-qty-change="plus" data-qty-target="{{ key | prepend: prepend_context }}"><span class="visually-hidden">plus</span>+</button>
+</div>

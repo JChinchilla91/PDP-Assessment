@@ -1,0 +1,84 @@
+{%- assign menu_1 = section.settings.footer_menu_1 -%}
+{%- assign menu_2 = section.settings.footer_menu_2 -%}
+<!-- Footer Links -->
+<div class="container text-center text-md-start">
+	<div class="row">
+		<div class="col-12 col-md-6 mt-md-0 mt-3">
+			<p class="h5 text-uppercase">Footer Content</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis laboriosam, maxime neque iusto cum rerum saepe suscipit rem voluptatem tempore.</p>
+			<form method="post" action="/" accept-charset="UTF-8" name="klaviyo-footer" id="footerNewsletterForm" data-klaviyo-list-id="{{ section.settings.list_id }}" data-needs-validation="event" novalidate>
+				<input type="hidden" name="$source" value="Newsletter Footer Form">
+				<label for="footer-email" class="form-label">Newsletter</label>
+				<div class="input-group mb-3">
+					<input type="email" name="email" id="footer-email" class="form-control" placeholder="Enter email" aria-label="email" required>
+					<div style="position: absolute; left: -5000px;" aria-hidden="true">
+						<label for="bots" class="visually-hidden">Newsletter</label>
+						<input type="text" id="bots" name="bots" tabindex="-1" value="">
+					</div>
+					<button class="btn btn-outline-primary" type="submit" name="subscribe" value="Subscribe" data-klaviyo-submit>Submit</button>
+					<div class="invalid-feedback">Invalid Email</div>
+				</div>
+			</form>
+			{%- render 'social-media' -%}
+		</div>
+		<div class="col-12 col-md-3 mb-md-0 mb-3">
+			<p class="h5 text-uppercase">Links</p>
+			{%- if menu_1 != blank -%}
+					<ul class="list-unstyled">
+					{%- for link in linklists[menu_1].links -%}
+					<li>
+							<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+					</li>
+					{%- endfor -%}
+					</ul>
+			{%- endif -%}
+		</div>
+		<div class="col-12 col-md-3 mb-md-0 mb-3">
+			<p class="h5 text-uppercase">Links</p>
+			{%- if menu_2 != blank -%}
+					<ul class="list-unstyled">
+					{%- for link in linklists[menu_2].links -%}
+					<li>
+						<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+					</li>
+			{%- endfor -%}
+			</ul>
+			{%- endif -%}
+		</div>
+	</div>
+</div>
+<div class="footer-copyright text-center py-3">&copy; {{ "now" | date: "%Y" }} {{ section.settings.cc_copy }}</a></div>
+
+{% schema %}
+{
+	"name": "Footer",
+	"class": "section-footer py-5 bg-light",
+	"tag": "footer",
+	"settings": [
+		{
+			"type": "text",
+			"id": "list_id",
+			"label": "Klavio List ID"
+		},
+		{
+			"type": "header",
+			"content": "Navigation"
+		},
+		{
+			"type": "link_list",
+			"id": "footer_menu_1",
+			"label": "First Menu"
+		},
+		{
+			"type": "link_list",
+			"id": "footer_menu_2",
+			"label": "Second Menu"
+		},
+		{
+			"type": "text",
+			"id": "cc_copy",
+			"label": "Copyright Copy"
+		}
+	]
+}
+{% endschema %}

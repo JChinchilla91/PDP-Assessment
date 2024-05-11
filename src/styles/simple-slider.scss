@@ -1,0 +1,16 @@
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+/* ======================================================================= */
+/* ========== 					SIMPLE SLIDER 					========== */
+/* ======================================================================= */
+.section-hero-slider-simple {
+	.carousel-item  .anim-hero-header {
+		opacity: 0; @include transform(translateY(40px));
+		@include transition(all .34s ease-out);
+	}
+	.slide-content { position: relative; top: 50%; transform: translateY(-50%); text-align: center; }
+	.carousel-inner { height: inherit; }
+	// Active slide
+	.carousel-item .anim-hero-header.on { opacity: 1; @include transform(translateY(0)); }
+}

@@ -1,0 +1,31 @@
+{%- comment -%}
+	 Code to run the QR Code generation of the gift card page
+
+	Usage:
+	{%- render 'gift-card-qr-code' -%}
+
+{%- endcomment -%}
+<script>
+	var string = { qrImageAlt: {{ 'gift_cards.issued.qr_image_alt' | t | json }} };
+	document.addEventListener('DOMContentLoaded', function() {
+	new QRCode( document.querySelector('.gift-card__qr-code'), {
+		text: document.querySelector('.gift-card__qr-code').dataset.identifier,
+		width: 72,
+		height: 72,
+		imageAltText: string.qrImageAlt
+		});
+	});
+	var template = document.getElementsByTagName("template")[0];
+	var clonedTemplate = template.content.cloneNode(true);
+	var isMessageDisplayed = false
+	document
+	.querySelector('.gift-card__copy-button')
+	.addEventListener('click', () => {
+		navigator.clipboard.writeText(document.getElementById('gift-card-code').innerText).then(function () {
+			if (!isMessageDisplayed) {
+				document.querySelector('.gift-card__copy-success').appendChild(clonedTemplate);
+				isMessageDisplayed = true
+			}
+		});
+	});
+</script>

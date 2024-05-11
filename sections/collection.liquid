@@ -1,0 +1,102 @@
+<div{% if section.settings.enable_filtering == true %} data-section-id="{{ section.id }}" id="shopifyFacets" data-section-type="shopifyFacets"{% endif %}>
+	{%- if section.settings.enable_filtering == true -%}
+		{{ 'collection.css' | asset_url | stylesheet_tag }}
+		<script src="{{ 'facets.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{%- endif -%}	
+	<!-- SHOPIFY FILTERS -->
+	<!-- Mobile -->
+	<form class="container d-lg-none" data-filter-form>
+		<div class="col mb-3">
+			<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtersOffcanvasMobile" aria-controls="filtersOffcanvasMobile">{{ 'products.facets.filter_button' | t }}</button>
+		</div>
+		<div class="offcanvas offcanvas-start" tabindex="-1" id="filtersOffcanvasMobile" aria-labelledby="filtersOffcanvasMobileLabel">
+			<div class="offcanvas-header">
+				<h5 class="offcanvas-title" id="filtersOffcanvasMobileLabel">{{ 'products.facets.filter_button' | t }}</h5>
+				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				{%- 
+					render 'facets', 
+					results: collection, 
+					enable_filtering: section.settings.enable_filtering, 
+					enable_sorting: section.settings.enable_sorting,
+					device: 'mobile'
+				-%}
+			</div>
+		</div>
+	</form>
+	<!-- Desktop -->
+	<form class="d-none d-lg-block" data-filter-form>
+		{%- 
+			render 'facets', 
+			results: collection, 
+			enable_filtering: section.settings.enable_filtering, 
+			enable_sorting: section.settings.enable_sorting,
+			device: 'desktop'
+		-%}
+	</form>
+	{%- paginate collection.products by section.settings.products_per_page -%}
+		<div class="container" id="productGridContainer">
+			<div class="row">
+			{%- if collection.products.size > 0 -%}
+				{%- for product in collection.products -%}
+					{%- render 'product-grid', product: product, classes: 'px-3', col_sm: 2, col_md: 3, col_lg: 4, show_secondary_image: section.settings.show_secondary_image -%}
+				{%- endfor -%}
+			{%- else -%}
+				<div class="col-12 text-center">	
+					<p>{{ 'collections.general.no_matches' | t }}</p>
+				</div>
+			{%- endif -%}
+			</div>
+
+			{%- if paginate.pages > 1 -%}
+			<div class="row">
+				<div class="col py-5">
+					{%- render 'pagination', paginate: paginate -%}
+				</div>
+			</div>
+			{%- endif -%}
+		</div>
+	{%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "class": "section-collection", 
+  "tag": "section",
+  "settings": [
+	{
+	  "type": "range",
+	  "id": "products_per_page",
+	  "min": 4,
+	  "max": 50,
+	  "step": 2,
+	  "default": 16,
+	  "label": "Products Per Page"
+	},
+	{
+		"type": "checkbox",
+		"id": "show_secondary_image",
+		"default": true,
+		"label": "Show second image on hover"
+	},
+	{
+	  "type": "header",
+	  "content": "Filtering and Sorting"
+	},
+	{
+	  "type": "checkbox",
+	  "id": "enable_filtering",
+	  "default": true,
+	  "label": "Enable Filtering"
+	},
+	{
+	  "type": "checkbox",
+	  "id": "enable_sorting",
+	  "label": "Enable Sorting",
+	  "default": true
+	}
+  ]
+}
+{% endschema %}

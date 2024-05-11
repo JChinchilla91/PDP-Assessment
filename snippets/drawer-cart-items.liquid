@@ -1,0 +1,59 @@
+{%- comment -%}
+	Renders products and design elements inside of the drawer cart
+
+	Usage:
+	{%- render 'drawer-cart-items' -%}
+	
+{%- endcomment -%}
+<script type="application/json" data-cart-json>{{ cart | json }}</script>
+{%- assign cart_count = cart.item_count -%}
+{%- if cart_count > 0 -%}
+	{%- for item in cart.items -%}
+		<div class="d-flex flex-grow-1 px-2 pb-3" data-drawer-key="{{ item.key }}">
+			{%- render 'responsive-image', 
+				image: item.image,
+				wrapper_class: 'img-wrapper w-25'
+				image_class: 'img-fluid' 
+			 -%}
+			<div class="product-info ps-2">
+				<h5 class="product-title">{{ item.product.title }}</h5>
+				{%- render 'product-price' with item as product, context: 'item' -%}
+				<div class="variant-title">{% unless item.variant.title == 'Default Title' %}{{ item.variant.title }}{% endunless %}</div>			
+				{%- liquid
+					assign property_size = item.properties | size
+				-%}
+				{%- if property_size > 0 -%}
+					<p>
+					{%- for p in item.properties -%}
+					{%- assign first_character_in_key = p.first | slice: 0 -%}
+					{%- unless p.last == blank or first_character_in_key == '_' -%}
+						<small>
+						{{ p.first }}:
+						{%- if p.last contains '/uploads/' -%}
+							<a href="{{ p.last }}" title="Download">{{ p.last | split: '/' | last }}</a>
+						{%- else -%}
+							{{ p.last }}<br>
+						{%- endif -%}
+						</small>
+					{%- endunless -%}
+					{%- endfor -%}
+					</p>
+				{%- endif -%}
+				{%- 
+					render 'quantity-buttons', 
+					item: item, 
+					variant: item.variant,
+					context: context 
+				-%}
+				<div>
+					<a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="Remove Item" data-key="{{ item.key }}" data-remove-item><small>{{ 'cart.general.remove' | t }}</small></a>
+				</div>
+			</div>
+		</div>
+	{%- endfor -%}
+{%- else -%}
+<!-- Empty cart -->
+<div class="loading-wrapper pb-3">
+	<p>You cart is empty.</p>
+</div>
+{%- endif -%}

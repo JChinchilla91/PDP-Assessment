@@ -1,0 +1,61 @@
+
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'addresses.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<section class="customers addresses" data-section-id="{{ section.id }}" data-section-type="addresses">	
+	<!-- MODAL SNIPPET -->
+	{%- render 'account-address-modal' -%}
+	<!-- FORM INSIDE MODAL -->
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-md-4 account-menu">{%- render 'account-menu' -%}</div>
+			<div class="col-12 col-md-8">
+				<h2 class="text-center">{{ 'customer.addresses.title' | t }}</h2>
+				<div class="row justify-content-center" id="top">
+					<div class="pt-xl-3 col-lg-8 text-center py-3 mb-3">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal" data-address-add>{{ 'customer.addresses.add_new' | t }}</button>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col pt-3 col-lg-8 col-xl-7 address-list addresses">
+						<div class="text-center">
+							{%- if customer.addresses.size > 0 -%}
+								<h2 class="heading text-center pb-3 pb-md-0 pt-lg-2 pb-2">{{ 'customer.addresses.address' | t }}</h2>
+							{%- endif -%}
+							{%- paginate customer.addresses by 20 -%}
+							{%- for address in customer.addresses -%}
+							{%- if address == customer.default_address -%}<p><em>{{ 'customer.addresses.default' | t }}</em></p>{%- endif -%}
+							{{ address | format_address }}
+							<div class="ml-2">
+								{%- comment -%}
+									TRIGGER MODAL
+									Add unique data-attributes to buttons using forloop.index
+									Pass address id using bs attrib
+								{%- endcomment -%}
+								<a href="#" class="address-edit-toggle liner mx-3" title="{{ 'customer.addresses.edit' | t }}" data-bs-toggle="modal" data-bs-target="#addressModal" data-address-edit={{ address.id }}>{{ 'customer.addresses.edit' | t }}</a>
+								<a href="#" class="address-delete liner mx-3" data-form-id="{{ address.id }}" data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}" title="{{ 'customer.addresses.delete' | t }}" data-address-delete={{ address.id }}>{{ 'customer.addresses.delete' | t }}</a>
+							</div>
+						{%- endfor -%}
+						{%- endpaginate -%}
+					</div>	
+				</div>
+				<p class="pt-5 text-center"><a href="/account" title="{{ 'customer.account.return' | t }}">{{ 'customer.account.return' | t }}</a></p>
+			</div>
+		</div><!-- / .row -->
+	</div><!-- / .container -->
+	<div class="container">
+		<div class="row">
+			<div class="col-12 account-menu text-center">
+				{%- render 'account-menu', bottom: true -%}
+			</div>
+		</div>
+	</div>
+</section><!-- / .Accounts -->
+{%- comment -%}
+	CUSTOMER ADDRESS DATA IN JSON FORMAT FOR JS PARSING
+{%- endcomment -%}
+<script>
+	window.bluedgeusa.theme.customerAddresses = {{ customer.addresses | json }};
+	window.bluedgeusa.theme.customerId = {{ customer.id }};
+	window.bluedgeusa.theme.modalTitleNew = '{{ 'customer.addresses.add_new' | t }}';
+	window.bluedgeusa.theme.modalTitleEdit = '{{ 'customer.addresses.edit_address' | t }}';
+</script>

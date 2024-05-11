@@ -1,0 +1,58 @@
+<header>
+	<nav class="navbar navbar-expand-md navbar-light bg-light p-lg-3">
+		<div class="container-fluid">
+			<a class="navbar-brand me-auto" title="brand" href="{{ shop.url }}">
+				<div class="logo">{%- render 'icons' with 'logo' -%}</div>
+			</a>
+			{%- render 'predictive-search', context: 'mobile' -%}
+			<!-- Offcanvas -->
+			<a class="cart-link px-2 d-md-none" href="#drawerCart" title="cart"{%- unless template.name == 'cart' -%} data-bs-toggle="offcanvas" role="button" aria-controls="drawerCart"{%-else -%} onclick="return false;"{%- endunless -%}>
+				<div class="cart-icon position-relative me-2 me-lg-0">
+					{%- render 'icons' with 'bag' -%}
+					{%- render 'cart-count-icon', item_count: cart.item_count -%}
+				</div>
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarMain">
+				<ul class="navbar-nav me-auto mb-2 mb-md-0">
+					{%- for link in linklists.main-menu.links -%}
+					{%- assign has_child = link.links.size -%}
+					<li class="nav-item{% if has_child > 0 %} dropdown{% endif %}" data-handle="{{ link.url }}">
+						<a class="nav-link{% if has_child > 0 %} dropdown-toggle{% endif %}" href="{{ link.url }}" {% if has_child > 0 %}id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"{% endif %}>{{ link.title }}</a>
+						{%- if has_child > 0 -%}
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							{%- for childlink in link.links -%}
+							<li><a class="dropdown-item" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a></li>
+							{%- endfor -%}
+						</ul>
+						{%- endif -%}
+					</li>
+					{%- endfor -%}
+				</ul>
+				{%- render 'predictive-search' -%}
+				<ul class="nav d-none d-lg-flex justify-content-end align-items-center">
+					{%- if shop.customer_accounts_enabled -%}
+						<li class="nav-item">
+							<a class="nav-link" href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" title="account">
+								<div class="account-icon">
+									{%- render 'icons' with 'account' -%}
+								</div>
+							</a>
+						</li>
+					{%- endif -%}
+					<li class="nav-item">
+						<!-- Offcanvas -->
+						<a class="cart-link cart-link" href="#drawerCart" title="cart"{%- unless template.name == 'cart' -%} data-bs-toggle="offcanvas" role="button" aria-controls="drawerCart"{%-else -%} onclick="return false;"{%- endunless -%}>
+							<span class="cart-icon position-relative">
+								{%- render 'icons' with 'bag' -%}
+								{%- render 'cart-count-icon', item_count: cart.item_count -%}
+							</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>

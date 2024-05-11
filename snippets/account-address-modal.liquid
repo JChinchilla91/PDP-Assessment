@@ -1,0 +1,81 @@
+{%- comment -%}
+	Renders the Add/Edit address modal containing the address form
+	
+	Usage:
+	{%- render 'account-address-modal' -%}
+
+{%- endcomment -%}
+<div class="modal" id="addressModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modal-title">{{ 'customer.addresses.add_new' | t }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				{%- form 'customer_address', customer.new_address, data-needs-validation: true, novalidate: true -%}
+				{{ form.errors | default_errors }}
+				<div class="mb-2">
+					<label for="AddressFirstName">{{ 'customer.addresses.first_name' | t }}</label>
+					<input type="text" name="address[first_name]" id="AddressFirstName" class="form-control" value="{{ form.first_name }}" autocapitalize="words" minlength="2" required data-form-input>
+					<div class="invalid-feedback">Please enter your first name</div>
+				</div>
+				<div class="mb-2">
+					<label for="AddressLastName">{{ 'customer.addresses.last_name' | t }}</label>
+					<input type="text" name="address[last_name]" id="AddressLastName" class="form-control" value="{{ form.last_name }}" autocapitalize="words" minlength="2" required data-form-input>
+					<div class="invalid-feedback">Please enter your last name</div>
+				</div>
+				<div class="mb-2">
+					<label for="AddressCompany">{{ 'customer.addresses.company' | t }}</label>
+					<input type="text" name="address[company]" id="AddressCompany" class="form-control" value="{{ form.company }}" autocapitalize="words" minlength="2" data-form-input>
+				</div>
+				<div class="mb-2">
+					<label for="AddressAddress1">{{ 'customer.addresses.address1' | t }}</label>
+					<input type="text" name="address[address1]" id="AddressAddress1" class="form-control" value="{{ form.address1 }}" autocapitalize="words" minlength="5" required data-form-input>
+					<div class="invalid-feedback">Please enter your address</div>
+				</div>
+				<div class="mb-2">
+					<label for="AddressAddress2">{{ 'customer.addresses.address2' | t }}</label>
+					<input type="text" name="address[address2]" id="AddressAddress2" class="form-control" value="{{ form.address2 }}" autocapitalize="words" data-form-input>
+				</div>
+				<div class="mb-2">
+					<label for="AddressCity">{{ 'customer.addresses.city' | t }}</label>
+					<input type="text" name="address[city]" id="AddressCity" class="form-control" value="{{ form.city }}" autocapitalize="words" minlength="2" required data-form-input>
+					<div class="invalid-feedback">Please enter your city</div>
+				</div>
+				<div class="mb-2 pt-1">
+					<label for="AddressCountry">{{ 'customer.addresses.country' | t }}</label>
+					<select name="address[country]" id="AddressCountry" class="form-control custom-select w-100" data-default="{{ form.country }}" required data-form-input>{{ country_option_tags }}</select>
+					<div class="invalid-feedback">Please enter your country</div>
+				</div>
+				<div id="AddressProvinceContainer" style="display: none">
+					<div class="mb-2 pt-1">
+						<label for="AddressProvince">{{ 'customer.addresses.province' | t }}</label>
+						<select name="address[province]" id="AddressProvince" class="form-control custom-select w-100" data-default="{{ form.province }}" data-form-input></select>
+						<div class="invalid-feedback">Please select your state</div>
+					</div>
+				</div>
+				<div class="mb-2">
+					<label for="AddressZip">{{ 'customer.addresses.zip' | t }}</label>
+					<input type="text" name="address[zip]" id="AddressZip" class="form-control" value="{{ form.zip }}" autocapitalize="characters" type="digits" length="[5,5]" zip="us" required data-form-input>
+					<div class="invalid-feedback">Please enter your zip code</div>
+				</div>
+				<div class="mb-2">
+					<label for="AddressPhone">{{ 'customer.addresses.phone' | t }}</label>
+					<input type="tel" name="address[phone]" id="AddressPhone" class="form-control" value="{{ form.phone }}" pattern="[0-9\-+ ]*" required data-form-input>
+					<div class="invalid-feedback">Please enter your phone number</div>
+				</div>
+				<div class="mb-2 pt-2">	
+					<div class="text-center custom-control-lg custom-control custom-checkbox">
+						<input type="checkbox" id="address_default_address" name="address[default]" class="custom-control-input" data-form-input>
+						<label class="custom-control-label" for="address_default_address">{{ 'customer.addresses.set_default' | t }}</label>
+					</div>
+				</div>
+				<div class="text-center pt-1 pb-3">
+					<button type="submit" class="btn btn-primary w-100" data-modal-submit>{{ 'customer.addresses.save' | t }}</button>
+				</div>
+			{%- endform -%}
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+/* ======================================================================= */
+/* ========== 					CUSTOMERS						========== */
+/* ======================================================================= */
+.customers {
+	padding-top: 3rem; padding-bottom: 3rem;
+	.product-img-contain { max-width: 200px; }
+	.account-menu {
+		.nav .nav-link { padding: 0; }
+	}
+	@include break ($lg) {
+		padding-top: 5rem;
+		padding-bottom: 5rem;
+	}
+}

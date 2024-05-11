@@ -1,0 +1,103 @@
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<h1>{{ 'cart.general.title' | t }}</h1>
+		</div>
+	</div>
+	{%- if cart.item_count > 0 -%}
+	<form action="/cart" method="post" class="row needs-validation" novalidate>
+		<div class="col-12 col-lg-7">
+			<div class="items-wrapper pt-3" data-drawer-cart-items>
+				{%- 
+					render 'drawer-cart-items',
+					context: 'cart'
+				-%}
+			</div>
+		</div>
+
+		<!-- ASIDE -->
+		<div class="col-12 col-lg-5">
+			{%- if section.settings.notes_enabled -%}
+				<label class="form-label" for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
+				<textarea class="form-control" name="note" id="CartSpecialInstructions">{{ cart.note }}</textarea>
+			{%- endif -%}
+			<div class="d-flex justify-content-between">
+				<span>{{ 'cart.general.subtotal' | t }}</span>
+				<span class="total-price">{{ cart.total_price | money }}</span>
+			</div>
+			{%- if cart.total_discounts > 0 -%}
+			<div class="d-flex justify-content-between">
+				<span>{{ 'cart.general.savings' | t }}</span>
+				<span>{{ cart.total_discounts | money }}</span>
+			</div>
+			{%- endif -%}
+			<p><small>{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</small></p>
+			{%- if section.blocks.size > 0 -%}
+				{%- for block in section.blocks -%}
+					<div class="form-check" {{ block.shopify_attributes }} data-checkboxes>
+						<input class="form-check-input" type="checkbox" value="" id="checkbox_{{ forloop.index }}" required="required">
+						<label class="form-check-label" for="checkbox_{{ forloop.index }}">{{ block.settings.tc_legal }}</label>
+						<p class="invalid-feedback">{{ 'cart.general.tc_warning' | t }}</p>
+					</div>
+				{%- endfor -%}
+			{%- endif -%}
+			<div class="d-flex justify-content-between">
+				<input class="visually-hidden" type="submit" name="update" value="{{ 'cart.general.update' | t }}">
+				<input class="btn btn-primary" type="submit" name="checkout" class="button" value="{{ 'cart.general.checkout' | t }}">
+			</div>
+			{%- if content_for_additional_checkout_buttons -%}
+				<div class="additional-checkout-buttons py-3">{{ content_for_additional_checkout_buttons }}</div>
+			{%- endif -%}
+		</div>
+	</form>
+	{%- else -%}
+		{%- comment -%} // Cart empty state // {%- endcomment -%}
+		<div class="supports-cookies">
+			<p>{{ 'cart.general.empty' | t }}</p>
+			<p>{{ 'cart.general.continue_browsing_html' | t }}</p>
+		</div>
+		{%- comment -%}
+			Cart no cookies state
+			---------------------
+			Browser cookies are required to use the cart. If cookies aren't enabled in the
+			browser a message is displayed prompting the user to enable them.
+		{%- endcomment -%}
+		<div class="supports-no-cookies">
+			<p>{{ 'cart.general.cookies_required' | t }}</p>
+		</div>
+	{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "class": "section-cart",
+  "tag": "section",
+  "settings": [
+	{
+	  "type": "checkbox",
+	  "id": "notes_enabled",
+	  "label": "Activate Note on the Cart Page",
+	  "default": true
+	},
+	{
+	  "type": "header",
+	  "content": "Terms and Conditions"
+	}
+  ],
+  "blocks": [
+	{
+	  "name": "Legal Agreements",
+	  "type": "content",
+	  "settings": [
+		{
+		  "type": "inline_richtext",
+		  "id": "tc_legal",
+		  "label": "T&C Legal Copy",
+		  "default": "I have read and agreed to the Terms & Conditions."
+		}
+	  ]
+	}
+  ]
+}
+{% endschema %}

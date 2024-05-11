@@ -1,0 +1,63 @@
+{%- liquid
+	render 'breadcrumb'
+
+	if section.blocks.size > 0
+		capture collection_grid_html
+			for block in section.blocks
+				if block.settings.collection.all_products_count > 0	
+					render 'collection-grid', product_per_row: 2, collection: block.settings.collection, block: block
+				endif
+			endfor
+		endcapture
+	else
+		capture collection_grid_html
+			for collection in collections
+				if collection.all_products_count > 0	
+					render 'collection-grid', product_per_row: 2, collection: collection
+				endif
+			endfor
+		endcapture
+	endif
+-%}
+<div class="collection-grid">
+	<div class="container">
+		<div class="row collection-grid">
+			{{- collection_grid_html -}}
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "class": "section-list-collection",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+	{
+	  "type": "header",
+	  "content": "Choose Collections",
+	  "info": "If no collections are added, theme will default to all collections"
+	}
+  ],
+  "blocks": [
+	{
+	  "type": "collection",
+	  "name": "Collection",
+	  "settings": [
+		{
+		  "type": "collection",
+		  "id": "collection",
+		  "label": "Collection"
+		},
+		{
+		  "type": "image_picker",
+		  "id": "image",
+		  "label": "Alternate Collection Image",
+		  "info": "If none, default collection image will be used."
+		}
+	  ]
+	}
+  ]
+}
+{% endschema %}

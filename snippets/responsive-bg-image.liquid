@@ -1,0 +1,20 @@
+{%- comment -%}
+	Background image snippet (mobile/desktop)
+
+	Accepts:
+	- image: {Object} Image object
+	- image_mobile: {Object} Image object
+	- wrapper_attribute: {String}
+
+	Usage:
+	{%- render 'responsive-bg-image', image: block.settings.slider_image, image_mobile: block.settings.slider_image_mobile -%}
+
+{%- endcomment -%}
+{%- liquid
+	if image_mobile != blank
+		render 'responsive-image', image: image, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image d-none d-lg-block', context: 'background'
+		render 'responsive-image', image: image_mobile, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image d-lg-none', context: 'background'
+	else
+		render 'responsive-image', image: image, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image', context: 'background'
+	endif
+-%}

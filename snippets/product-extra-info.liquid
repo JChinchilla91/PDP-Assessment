@@ -1,0 +1,25 @@
+{%- comment -%}
+	Renders an Accordion for extra content using metaobjects
+	
+	Accepts:
+	- product: {Object} Product Object
+	
+	Usage:
+	{%- render 'product-extra-info' with product as product -%}
+	
+{%- endcomment -%}
+{{ 'product-extra-info.css' | asset_url | stylesheet_tag }}
+<div class="product-extra-info accordion py-3" id="extraContentAccordion">
+	{%- for metaobject in product.metafields.theme.product_extra_information.value -%}
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="accordionHeading{{ forloop.index0 }}">
+				<button class="accordion-button text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo{{ forloop.index0 }}" aria-expanded="false" aria-controls="collapseInfo{{ forloop.index0 }}">{{ metaobject.content_header | metafield_text }}</button>
+			</h2>
+			<div id="collapseInfo{{ forloop.index0 }}" class="accordion-collapse collapse" aria-labelledby="accordionHeading{{ forloop.index0 }}">
+				<div class="accordion-body">
+					<div class="content">{{ metaobject.text_content | metafield_text }}</div>
+				</div>
+			</div>
+		</div>
+	{%- endfor -%}
+</div>

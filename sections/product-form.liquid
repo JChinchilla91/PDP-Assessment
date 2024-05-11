@@ -1,0 +1,6 @@
+{%- comment -%} IMPORTANT: This section is used by AJAX Load API {%- endcomment -%}
+<div data-section-id="{{ section.id }}" data-section-type="productQuickShop">
+	{%- assign current_variant = product.selected_or_first_available_variant -%}
+	{%- render 'product-form' with product as product, current_variant: current_variant -%}
+	<script type="application/json" data-product-json>{{ product | json }}</script>
+</div>

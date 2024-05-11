@@ -1,0 +1,15 @@
+{
+	"sections": {
+		"main": {
+			"type": "page"
+		},
+		"influencer": {
+			"type": "influencer",
+			"settings": {}
+		}
+	},
+	"order": [
+		"main",
+		"influencer"
+	]
+}

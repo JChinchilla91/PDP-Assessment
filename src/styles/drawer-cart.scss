@@ -1,0 +1,50 @@
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+/* ======================================================================= */
+/* ========== 				DRAWER CART + CART PAGE				========== */
+/* ======================================================================= */
+.template-cart, .drawer-cart {
+	.qty-wrapper {
+		input { text-align: center; }
+		// Change hover behavior for mobiles
+		@media screen and (max-width: $lg) {
+			.btn-outline-secondary:hover {
+				-moz-animation: btnbg .3s normal forwards ease-in 1s;
+				-o-animation: btnbg .3s normal forwards ease-in 1s;
+				animation: btnbg .3s normal forwards ease-in 1s;
+			}
+		}	
+	}
+}
+.template-cart .lazywrapper { width: 100%; max-width: 200px; }
+
+@-webkit-keyframes btnbg { 
+	0% { background-color: inherit; }
+	100% { background-color: var(--white); }
+}
+@keyframes btnbg { 
+	0% { background-color: inherit; }
+	100% { background-color: var(--white); }
+}
+
+/* ======================================================================= */
+/* ========== 						DRAWER CART					========== */
+/* ======================================================================= */
+.drawer-cart {
+	background: #fff;
+	.header-wrapper, .items-wrapper, .footer-wrapper { width: 100%; }
+	.header-wrapper { border-bottom: 1px solid var(--border-color); }
+	.items-wrapper { 
+		overflow-y: auto; overflow-x: hidden; height: 100%; @include transition(opacity .4s ease-in);
+		&.off { opacity: 0; @include transition(opacity 0s ease); }
+		.img-wrapper { width: 100%; max-width: 180px; }
+	}
+	.loading-wrapper { 
+		display: flex; justify-content: center; align-items: center; position: absolute; opacity: 1; visibility: visible; width: 100%; top: 50%; left: 50%; @include transform(translate(-50%, -50%)); text-align: center; z-index: 3;
+		@include transition(all .4s ease-in);
+		.image-preloader { top: 38px; }
+		&.off { opacity: 0; visibility: hidden; }
+	}
+	.footer-wrapper { border-top: 1px solid var(--border-color); }
+}

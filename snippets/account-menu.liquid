@@ -1,0 +1,59 @@
+{%- comment -%}
+	Renders the account menu on customer pages
+	
+	Accepts:
+	- bottom: {Boolean} positions account menu
+	
+	Usage:
+	{%- render 'account-menu', bottom: true -%}
+	
+{%- endcomment -%}
+{%- unless bottom == true -%}
+<div class="account-menu">
+	<h2>{{ 'customer.orders.greeting' | t }} {{ customer.first_name | capitalize }}</h2>
+	<ul class="list-unstyled">
+		<li class="nav-item{% if request.path == '/account' %} active{% endif %}">
+			<a class="nav-link" href="/account" title="{{ 'customer.orders.title' | t }}">{{ 'customer.orders.title' | t }}</a>
+		</li>
+		<li class="nav-item{% if request.path == '/account/addresses' %} active{% endif %}">
+			<a class="nav-link" href="/account/addresses" title="{{ 'customer.addresses.title' | t }}">{{ 'customer.addresses.title' | t }}</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/account/logout" title="{{ 'customer.login.logout' | t }}">{{ 'customer.login.logout' | t }}</a>
+		</li>
+	</ul>
+	<div class="help-block d-none d-md-block">
+		<h3 class="pb-2">{{ 'customer.account.help' | t }}</h5>
+		<ul class="nav flex-column list-unstyled">
+		{%- for link in linklists[settings.account_menu].links -%}
+			<li class="nav-item{% if link.active %} active{% endif %}">
+				<a class="nav-link mb-2" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+			</li>
+			{%- endfor -%}
+			<li><a class="tel" href="tel:+{{ shop.phone | replace: '-', '' }}" title="Give us a call">{{ shop.phone }}</a></li>
+			<li><a class="email" href="mailto:{{ shop.email }}" title="Send us an email">{{ shop.email }}</a></li>
+		</ul>
+	</div>
+</div>
+{%- endunless -%}
+<!-- MOBILE -->
+{%- if bottom == true -%}
+<div class="help-block d-md-none">
+	<div class="site-bg py-4">
+		<h3 class="pb-2">{{ 'customer.account.help' | t }}</h5>
+		<ul class="nav flex-column list-unstyled">
+		{%- for link in linklists[settings.account_menu].links -%}
+			<li class="nav-item{% if link.active %} active{% endif %}">
+				<a class="nav-link" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+			</li>
+		{%- endfor -%}
+		<li>
+			<a class="tel" href="tel:+{{ shop.phone }}" title="Give us a call">{{ shop.phone }}</a>
+		</li>
+		<li>
+			<a class="email" href="mailto:{{ shop.email }}" title="Send us an email">{{ shop.email }}</a>
+		</li>
+		</ul>
+	</div>
+</div>
+{%- endif -%}

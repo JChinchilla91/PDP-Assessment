@@ -1,0 +1,19 @@
+#shopify-section-product-form, .section-product {
+	button {
+		.loading-copy { visibility: hidden; position: absolute; }
+		&.loading {
+			span[data-add-to-cart-text] { visibility: hidden; }
+			.loading-copy { 
+				visibility: visible;
+				&.pulse { animation: pulse 1.36s infinite linear; }
+			}
+		}
+	}
+}
+
+// KEYFRAMES
+@keyframes pulse {
+	from { opacity: 0.15 }
+	40% { opacity: 0.75 }
+	to { opacity: 0.15 }
+}

@@ -1,0 +1,32 @@
+{%- comment -%}
+	Renders the collection grid
+
+	Accepts:
+	- product_per_row: {Number} Product per row (0|2|4)
+
+	Usage:
+	{%- render 'collection-grid', product_per_row: 2 -%}
+
+{%- endcomment -%}
+{%- liquid
+	assign collection_image	 = block.settings.image | default: collection.image
+	assign collection_title = collection.title
+	assign collection_url = collection.url
+	if product_per_row == 0 or product_per_row == blank
+		assign product_per_row = 4
+	endif
+	assign col = 12 | divided_by: product_per_row
+	if col == 0
+		assign col = 'col-lg'
+	else
+		assign col = col | prepend: 'col-lg-'
+	endif
+-%}
+<div class="{% unless free_grid == true %}col-12 col-md-6 {{ col }}{% else %}col px-2{% endunless %} collection-grid text-center pb-3">
+	<a href="{{ collection_url }}" title="{{ collection_title }}" class="collection-item d-block">
+		{%- render 'responsive-image', image: collection_image, image_class: 'img-fluid' -%}
+		<p class="collection-title px-2 pt-2 text-uppercase text-center">
+			<a href="{{ collection_url }}" title="{{ collection_title }}">{{ collection_title }}</a>
+		</p>
+	</a>
+</div>

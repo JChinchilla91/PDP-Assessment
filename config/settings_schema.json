@@ -1,0 +1,218 @@
+[
+	{
+		"name": "theme_info",
+		"theme_name": "STARTER KIT 2020",
+		"theme_version": "3.0.0",
+		"theme_author": "Bluedge USA",
+		"theme_documentation_url": "https://shopify.github.io/core/",
+		"theme_support_email": "nico@bluedgeusa.com"
+	},
+	{
+		"name": "Theme Color",
+		"settings": [
+			{
+				"type": "color",
+				"id": "theme_light_color",
+				"label": "Theme Light Mode Color",
+				"default": "#1773B0"
+			},
+			{
+				"type": "color",
+				"id": "theme_dark_color",
+				"label": "Theme Dark Mode Color",
+				"default": "#5c636a"
+			}
+		]
+	},
+	{
+		"name": "Favicon",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "favicon",
+				"label": "Favicon Image",
+				"info": "Will be scaled down to 32 x 32px, this will be default if none provided from the branding settings"
+			}
+		]
+	},
+	{
+		"name": "Quick Shop",
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "quickshop_enabled",
+				"label": "Activate Quick Shop Popup",
+				"default": false
+			}
+		]
+	},
+	{
+		"name": "Collection",
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "collection_sort_enabled",
+				"label": "Activate Collection Sort Options",
+				"default": true
+			}
+		]
+	},
+	{
+		"name": "Gift Card",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "gift_card_company_logo",
+				"label": "Company logo to display in Gift Card Page"
+			}
+		]
+	},
+	{
+		"name": "Product Grid",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "no_image",
+				"label": "Default Product Image",
+				"info": "Will be used if a product image is missing."
+			},
+			{
+				"type": "header",
+				"content": "Grid Settings"
+			},
+			{
+				"type": "range",
+				"id": "search_limit_by",
+				"min": 1,
+				"max": 50,
+				"step": 1,
+				"default": 24,
+				"label": "Select the Amount of Items to Show"
+			}
+		]
+	},
+	{
+		"name": "Drawer Cart",
+		"settings": [
+			{
+				"type": "text",
+				"id": "checkout_btn_copy",
+				"label": "Checkout Button Text",
+				"default": "Checkout"
+			}
+		]
+	},
+	{
+		"name": "Blog",
+		"settings": [
+			{
+				"type": "select",
+				"id": "articles_per_page",
+				"label": "Articles Per Page",
+				"default": "10",
+				"options": [
+					{
+						"value": "1",
+						"label": "1"
+					},
+					{
+						"value": "2",
+						"label": "2"
+					},
+					{
+						"value": "3",
+						"label": "3"
+					},
+					{
+						"value": "4",
+						"label": "4"
+					},
+					{
+						"value": "5",
+						"label": "5"
+					},
+					{
+						"value": "6",
+						"label": "6"
+					},
+					{
+						"value": "7",
+						"label": "7"
+					},
+					{
+						"value": "8",
+						"label": "8"
+					},
+					{
+						"value": "9",
+						"label": "9"
+					},
+					{
+						"value": "10",
+						"label": "10"
+					},
+					{
+						"value": "15",
+						"label": "15"
+					},
+					{
+						"value": "20",
+						"label": "20"
+					},
+					{
+						"value": "25",
+						"label": "25"
+					}
+				]
+			},
+			{
+				"type": "select",
+				"id": "blog_truncate",
+				"label": "Words Displayed Before Read More Button",
+				"default": "50",
+				"options": [
+					{
+						"value": "25",
+						"label": "25"
+					},
+					{
+						"value": "50",
+						"label": "50"
+					},
+					{
+						"value": "75",
+						"label": "75"
+					},
+					{
+						"value": "100",
+						"label": "100"
+					},
+					{
+						"value": "125",
+						"label": "125"
+					},
+					{
+						"value": "150",
+						"label": "150"
+					},
+					{
+						"value": "200",
+						"label": "200"
+					},
+					{
+						"value": "300",
+						"label": "300"
+					},
+					{
+						"value": "400",
+						"label": "400"
+					},
+					{
+						"value": "500",
+						"label": "500"
+					}
+				]
+			}
+		]
+	}
+]

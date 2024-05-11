@@ -1,0 +1,18 @@
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+.product-extra-info {
+	.accordion {
+		&-button { font-weight: 500; line-height: 1; }
+		&-body {
+			.content {
+				p:last-of-type, ul, ol, dl { margin-bottom: 0; }
+			}
+		}
+
+		// LARGE
+		@include break ($lg) {
+			&-body .content p { line-height: 1.5; }
+		}
+	}
+}

@@ -1,0 +1,47 @@
+{%- comment -%}
+	Renders hero content on collection banners
+	
+	Accepts:
+	- overlay_color: {Object: color} hero overlay color
+	- overlay_opacity: {Object: range} hero overlay opacity
+	- blocks: {Object: blocks} section blocks for each banner image
+
+	Usage:
+	{%- render 'hero-section' 
+		overlay_color: section.settings.hero_overlay_color,
+		overlay_opacity: section.settings.range_opacity,
+		blocks: section.blocks
+	-%}
+
+{%- endcomment -%}
+{%- if blocks.size > 0 -%}
+	{%- for block in blocks -%}
+		{%- if collections[block.settings.collection].id == collection.id -%}
+		{%- if block.settings.slider_image != blank -%}
+		<div class="hero-slider">
+			{%- render 'responsive-bg-image', image: block.settings.slider_image, mobile_image: block.settings.slider_image_mobile, lazyloading_style: 'eager' -%}
+			<div class='text-overlay'>
+				{%- if overlay_color != blank -%}<div class="overlay" style="background-color: {{ overlay_color }}; opacity: {{ overlay_opacity | divided_by: 100.0 }};"></div>{%- endif -%}
+				<div class="slide-content">
+				{%- if forloop.first == true -%}
+				{%- if block.settings.hero_heading != blank -%}
+				<h1 class="title text-white pb-3">{{ block.settings.hero_heading }}</h1>
+				{%- endif -%}
+				{%- else -%}
+				{%- if block.settings.hero_heading != blank -%}
+				<h2 class="title text-white pb-3">{{ block.settings.hero_heading }}</h2>
+				{%- endif -%}
+				{%- endif -%}
+				{% if block.settings.hero_sub_heading != blank %}<h3 class="pb-3 text-white">{{ block.settings.hero_sub_heading }}</h3>{% endif %}
+				{%- if block.settings.hero_btn_text != blank and block.settings.hero_btn_link != blank -%}
+					<a class="btn btn-secondary" href="{{ block.settings.hero_btn_link }}" title="{{ block.settings.hero_btn_text }}">{{ block.settings.hero_btn_text }}</a>
+				{%- endif -%}
+				</div>
+				<span class="image-preloader"></span>
+			</div>
+		</div>
+		{%- break -%}
+		{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endif -%}

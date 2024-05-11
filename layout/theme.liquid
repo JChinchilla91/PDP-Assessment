@@ -1,0 +1,153 @@
+{%- liquid
+	assign active_subscriber = customer.tags | where: 'Active Subscriber'
+-%}
+<!doctype html>
+<html class="no-js supports-no-cookies" lang="{{ shop.locale }}">
+	<head>
+		{%- comment -%} Preconnect Google fonts {%- endcomment -%}
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		{%- comment -%} Load Google font with preload {%- endcomment -%}
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=optional" rel="stylesheet" type="text/css"/>
+		</noscript>
+		{%- liquid
+			comment
+			# Store metadata attributes
+			endcomment
+			render 'metadata'
+
+			comment
+			# Inline CSS
+			endcomment
+			render 'inline-css'
+		-%}
+		{{ 'Larken-Bold.woff2' | asset_url | preload_tag: as: 'script', type: 'font/woff2', as: 'font', crossorigin: '' }}
+		{{ 'bootstrap.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ 'flickity.css' | asset_url | stylesheet_tag: preload: true }}
+		<!-- THEME SETTINGS -->
+		{%- liquid
+			comment
+			#	NO IMAGE Fallback
+			#	Works with the "no_image" theme backend setting, if this is empty, defaults to "placeholder.jpg" which should be in theme's asset folder
+			endcomment
+			if settings.no_image != blank
+				assign image_width = settings.no_image.width | default: 900
+				assign image_height = settings.no_image.height | default: 900
+				assign no_image_default_aspect_ratio = image_height | divided_by: image_width
+				assign no_image_aspect_ratio = settings.no_image.aspect_ratio | default: no_image_default_aspect_ratio
+				assign no_image_url = settings.no_image | image_url: width: image_width, height: image_height
+			else
+				assign no_image_url = "placeholder.jpg" | asset_img_url: "900x900"
+			endif
+		-%}
+		<script>
+			{%- comment -%}
+			# Shopify Public CDN used by Webpack at runtime for chunks
+			# REFERENCE: https://dev.to/youhan/shopify-theme-and-webpack-code-splitting-3b1p
+			{%- endcomment -%}
+			{%- capture themeCDNPath -%}
+				{{ 'theme.js' | asset_url }}
+			{%- endcapture -%}
+			{%- assign CDNPath = themeCDNPath | split: 'theme.js' | first -%}
+			window.__webpack_public_path__ = "{{ CDNPath }}";
+
+			{%- comment -%}General Theme Settings{%- endcomment -%}
+			document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+			window.bluedgeusa 			= window.bluedgeusa || {};
+			window.bluedgeusa.core 		= window.bluedgeusa.core || {};
+			window.bluedgeusa.theme 	= window.bluedgeusa.theme || {};
+			window.bluedgeusa.sections 	= window.bluedgeusa.sections || {};
+			window.bluedgeusa.product 	= window.bluedgeusa.product || {};
+			window.bluedgeusa.product.currentVariant = {{ product.selected_or_first_available_variant | json }};
+			window.bluedgeusa.theme = {
+				strings: {
+					addToCart: {{ 'products.product.add_to_cart' | t | json }},
+					soldOut: {{ 'products.product.sold_out' | t | json }},
+					unavailable: {{ 'products.product.unavailable' | t | json }}
+				},
+				moneyFormat: {{ shop.money_format | json }},
+				moneySymbol: {{ cart.currency.symbol | json }},
+				noImage: {
+					url: {{ no_image_url | json }},
+					aspectRatio: {{ no_image_aspect_ratio | json }}
+				},
+				dynamicCartActive: true,
+				quickShopActive: {{ settings.quickshop_enabled }},
+				currentPage: '{{ template.name | handleize }}',
+				currentPageTemplate: '{{ template.suffix | handleize }}',
+				customer: {
+					has_active_plan: {% if active_subscriber != blank %}true{% else %}false{% endif %}
+				},
+				routes: {
+					rootUrl: {{ routes.root_url | json }},
+					cartUrl: {{ routes.cart_url | json }},
+					cartAddUrl: {{ routes.cart_add_url | json }},
+					cartChangeUrl: {{ routes.cart_change_url | json }},
+					cartUpdateUrl: {{ routes.cart_update_url | json }},
+					searchUrl: {{ routes.search_url | json }},
+					clearCart: {{ routes.cart_clear_url | json }}
+				}
+			};
+		</script>
+		<script src="{{ 'bootstrap.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		<script src="{{ 'vanilla-lazyload.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		{{ content_for_header }}
+		{%- liquid
+			comment
+			# Polyfill scripts for javascript
+			endcomment
+			render 'polyfill'
+		-%}
+		<script src="{{ 'theme.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	</head>
+	<body id="{{ page_title | handle }}" class="template-{{ template.name | handleize }}{% if template.suffix != blank %} template-{{ template.suffix | handleize }}{% endif %}">
+		{%- liquid
+			comment
+			# Drawer Cart HTML
+			endcomment
+			render 'drawer-cart'
+
+			comment
+			# Quickshop Modal HTML
+			endcomment
+			render 'quickshop-modal'
+
+			comment
+			# Header navigation bar HTML
+			endcomment
+			section 'header'
+		-%}
+		<main>{{ content_for_layout }}</main>
+		{%- liquid
+			comment
+			# Footer navigation HTML
+			endcomment
+			section 'footer'
+
+			comment
+			# Bootstrap Toast Alert HTML
+			endcomment
+			render 'toast-alert'
+
+			comment
+			# Vanilla lazyload scripts
+			endcomment
+			render 'vanilla-lazyload'
+		-%}
+		{%- comment -%} DEFER CSS {%- endcomment -%}
+		<link rel="stylesheet" href="{{ 'drawer-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+		<link rel="stylesheet" href="{{ 'unfold.css' | asset_url }}" media="print" onload="this.media='all'">
+		<link rel="stylesheet" href="{{ 'animations.css' | asset_url }}" media="print" onload="this.media='all'">
+	</body>
+<!--
+======================================
+=> Web Development: BLUEDGE USA LLC
+=> Contact: hello@bluedgeusa.com
+=> Website: https://bluedgeusa.com
+=> E-commerce Digital Agency
+======================================
+-->
+</html>

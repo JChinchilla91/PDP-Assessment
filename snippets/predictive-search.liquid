@@ -1,0 +1,23 @@
+{%- comment -%}
+	Render dropdown list of products based on user search query
+	
+	Accepts:
+	- context {String} screen size
+	
+	Usage:
+	{%- render 'predictive-search', context: 'mobile' -%}
+	
+{%- endcomment -%}
+<section class="predictive-search{% if context == 'mobile' %} d-lg-none{% endif %}" data-section-id="predictiveSearch" data-section-type="predictiveSearch">
+	<form action="/search" method="get"{% if context == 'mobile' %} class="off" {% endif %}role="search" data-needs-validation novalidate data-search-form>
+		<input type="hidden" name="type" value="product">
+		<input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" autocomplete="off" required>
+		<div class="invalid-feedback">Please fill out this field</div>
+	</form>
+	{%- if context == 'mobile' -%}
+		<a href="/search" class="search-icon ms-1" title="Search the store"{% if context == 'mobile' %} data-search-icon{%- endif -%}>
+			{%- render 'icons' with 'search' -%}
+		</a>
+	{%- endif -%}
+	<div class="search-results w-100 px-1" data-search-results></div>
+</section>

@@ -1,0 +1,145 @@
+@import './global/fonts.scss';
+@import './global/variables.scss';
+@import './global/mixins.scss';
+
+/* ======================================================================= */
+/* ========== 				        GENERAL		        		========== */
+/* ======================================================================= */
+// For JS support
+.no-js:not(html){display:none; .no-js & {display: block;}} .js{.no-js & {display: none;}}
+.supports-no-cookies:not(html){display: none;html.supports-no-cookies & {display: block;}}
+.supports-cookies {html.supports-no-cookies & {display: none;}}
+html { padding-bottom: 0!important; }
+body { min-height: 100%; min-height: 100vh; }
+*, *:before, *:after { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.no-scroll { overflow: hidden; }
+.overlay { position: absolute; width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; }
+// Prevent inner button targets in JS
+button > * { pointer-events: none; }
+.placeholder { background-color: rgba(18, 18, 18, 0.055); color: rgba(18, 18, 18, 0.55); fill: rgba(18, 18, 18, 0.55); }
+
+
+/* ======================================================================= */
+/* ========== 			LAZY LOADING ANIMATION & IMAGES			========== */
+/* ======================================================================= */
+.responsive-image { position: relative; }
+.responsive-image img { display: block; width: 100%; height: auto; }
+.responsive-bg-image { width: 100%; height: 100%; }
+.responsive-bg-image img { height: 100%; object-fit: cover !important; }
+img.lazy, img.lazyloading { opacity: 0; }
+img.loaded, img.error, img.flickity-lazyloaded { opacity: 1; will-change: opacity; @include transition(opacity .46s ease-out .1s); }
+img.error { opacity: 0.5 } // 'placeholder.jpg' is used elsewhere in the theme not necessary for broken images, this rule is to easily differentiate if this is a broken image
+
+// IMAGE PRELOADER
+.image-preloader { position: absolute; display: block; height: 2px; width: 50px; left: 0; bottom: 0; right: 0; top: 0; opacity: 0; visibility: hidden; margin: auto; pointer-events: none; background-color: #838383; z-index: -1; transition: all 0.2s ease-in-out; overflow: hidden; }
+.image-preloader::after { position: absolute; content: ''; bottom: 0; right: 0; top: 0; height: 100%; width: 200%; background-color: #c5c5c5; }
+.lazyloading + .image-preloader, .lazyloading .image-preloader, .loading-wrapper .image-preloader, img.lazy:not(.loaded) + .image-preloader { opacity: 1; visibility: visible; z-index: 1;
+	&::after {
+		-webkit-animation: lazyLoader 3s infinite;
+		animation: lazyLoader 3s infinite;
+		-webkit-animation-timing-function: cubic-bezier(.43, .43, .25, .99);
+		animation-timing-function: cubic-bezier(.43, .43, .25, .99);
+	}
+}
+.loaded .image-preloader { opacity: 0; visibility: hidden; }
+@-webkit-keyframes lazyLoader {
+	0%, 100% { transform: translateX(-50%); }
+	50% { transform: translateX(100%); }
+}
+@keyframes lazyLoader {
+	0%, 100% { transform: translateX(-50%); }
+	50% { transform: translateX(100%); }
+}
+
+
+/* ======================================================================= */
+/* ========== 			     	   NAVBAR  		     			========== */
+/* ======================================================================= */
+.navbar {
+	overflow: clip;
+	.logo { width: 6.2rem; }
+	.cart-icon, .account-icon, .search-icon { width: 1.5rem; height: auto; display: flex; justify-content: center; align-items: center; }
+	.cart-count { font-size: .625rem; font-weight: 700; text-align: center; padding: .3125rem .4375rem; }
+}
+
+/* ======================================================================= */
+/* ========== 					PRODUCTS GRID					========== */
+/* ======================================================================= */
+.collection-product {
+	// Second Image Hover Effect
+	.product-wrapper {
+		&.product-img-wrapper.media-hover-effect {
+			position: relative;
+			.responsive-image { transition: opacity .34s ease-in-out; }
+			.responsive-image.secondary-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; }
+			.responsive-image.secondary-image img { height: 100%; object-fit: cover; }
+			&:hover .responsive-image:first-child:not(:only-child) { opacity: 0; }
+			&:hover .responsive-image.secondary-image { opacity: 1; }
+		}
+	}
+}
+
+/* ======================================================================= */
+/* ========== 					PREDICTIVE SEARCH				========== */
+/* ======================================================================= */
+.predictive-search {
+	form {
+		max-width: 7rem; display: inline-block;
+		&.off { display: none; }
+	}
+	@include break ($lg) {
+		form { max-width: 12rem; }
+	}
+}
+
+/* ======================================================================= */
+/* ========== 				     VIDEO SECTION					========== */
+/* ======================================================================= */
+.section-video-banner {
+	.heading-wrapper { z-index: 1; color: var(--white); position: absolute; }
+}
+
+/* ======================================================================= */
+/* ========== 				COLLECTION BANNER					========== */
+/* ======================================================================= */
+.template-collection {
+	.collection-banner {
+		width: 100%; height: 100%; overflow: hidden; position: relative;
+		.hero-slider { height: 400px; }
+	}
+
+	@include break ($lg) {
+		.collection-banner {
+			.hero-slider { height: 600px; }
+		}
+	}
+}
+
+
+/* ======================================================================= */
+/* ========== 				TOAST (warnings)					========== */
+/* ======================================================================= */
+.toast-wrapper {
+	z-index: -1; height: 100vh; position: fixed; width: 100%; top: 0; left: 0; visibility: hidden;
+	&.active { z-index: 10001; background: rgba(0,0,0,.5); visibility: visible; }
+}
+
+/* ======================================================================= */
+/* ========== 						BLOG						========== */
+/* ======================================================================= */
+
+.blog{
+	.bg-img{
+		height: 300px;
+	}
+	@include break ($md) {
+		.bg-img{
+			height: 500px;
+		}
+	}
+}
+
+[aria-hidden="true"] { visibility: hidden; }
+
+.nav-link { font-family: 'Montserrat'; }
+.title { font-family: 'Larken-Bold'; }

@@ -1,0 +1,88 @@
+{%- liquid 
+	assign alignment = section.settings.alignment
+	if section.settings.alignment == 'left'
+		assign alignment = 'start'
+	elsif section.settings.alignment == 'right'
+		assign alignment = 'end'
+	endif
+-%}
+<div class="container py-5">
+	{%- if section.settings.heading != blank or section.settings.copy != blank -%}
+	<div class="row">
+		<div class="col text-{{ alignment }}">
+			{%- if section.settings.heading != blank -%}<h1>{{ section.settings.heading }}</h1>{%- endif -%}
+			{%- if section.settings.copy != blank -%}{{ section.settings.copy }}{%- endif -%}
+		</div>
+	</div>
+	{%- endif -%}
+	{%- if section.blocks.size > 0 -%}
+	<div class="row row-cols-{{ section.blocks.size }}">
+		{%- for block in section.blocks -%}
+		{%- if block.settings.title != blank and block.settings.link != blank -%}
+		<div class="col text-{{ alignment }}">
+			<a href="{{ block.settings.link }}" title="{{ block.settings.title }}">{{ block.settings.title }}</a>
+		</div>
+		{%- endif -%}
+		{%- endfor -%}
+	</div>
+	{%- endif -%}
+</div>
+
+{% schema %}
+{
+	"name": "Text Highlight",
+	"tag": "section",
+	"class": "section-text-highlight",
+	"settings": [
+		{
+			"type": "text_alignment",
+			"id": "alignment",
+			"label": "Text alignment",
+			"default": "center"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Header",
+			"default": "Talk about your brand"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Copy",
+			"default": "Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store."
+		}
+	],
+	"blocks": [
+		{
+			"type": "links",
+			"name": "Links",
+			"limit": 3,
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Link Copy",
+					"default": "Link label"
+				},
+				{
+					"type": "url",
+					"id": "link",
+					"label": "Link",
+					"default": "/collections"
+				}
+			]
+		}
+ 	],
+	"presets": [
+		{
+			"name": "Text Highlight",
+			"blocks": [
+				{
+					"type": "links"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

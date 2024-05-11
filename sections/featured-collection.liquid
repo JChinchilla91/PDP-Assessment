@@ -1,0 +1,149 @@
+{{ 'product-slider.css' | asset_url | stylesheet_tag: preload: true }}
+<script src="{{ 'featured-collection-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{%- liquid 
+	assign flickityArrows = true
+	assign flickityDots = true
+	assign flickityLoop = true
+	assign collection = section.settings.collection
+-%}
+<section class="product-grid product-slider py-5" data-section-id="{{ section.id }}" data-section-type="featuredCollectionSlider">
+	<div class="container">
+		<div class="row">
+			<div class="col pb-3 text-{{ section.settings.alignment }}">
+				{%- for block in section.blocks -%}
+					{%- case block.type -%}
+						{%- when 'subheader' -%}
+							{%- if block.settings.sub_header != blank %}<h3 class="h4 sub-header">{{ block.settings.sub_header }}</h3>{%- endif -%}
+						{%- when 'header' -%}
+							{%- if block.settings.heading != blank %}<h2 class="header">{{ block.settings.heading }}</h2>{%- endif -%}
+					{%- endcase -%}
+				{%- endfor -%}
+			</div>
+		</div>
+		{%- if collection.products.size > 0 -%}
+			<div class="row" data-generic-slider data-arrows="{{ flickityArrows }}" data-dots="{{ flickityDots }}" data-loop="{{ flickityLoop }}" data-group-cells="true">
+				{%- liquid
+					for product in collection.products limit: section.settings.number_of_products
+						render 'product-grid', product: product, classes: 'px-3', col_sm: 2, col_md: 3, col_lg: 4, show_secondary_image: section.settings.show_secondary_image
+					endfor
+				-%}
+			</div>
+		{%- endif -%}
+	</div>
+</section>
+
+{% schema %}
+{
+	"name": "Featured Collection",
+	"tag": "section",
+	"class": "section-featured-collection",
+	"settings": [
+		{
+			"type": "collection",
+			"id": "collection",
+			"label": "Collection"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_secondary_image",
+			"default": true,
+			"label": "Show second image on hover"
+		},
+		{
+			"type": "select",
+			"id": "number_of_products",
+			"label": "Number of Products to Display",
+			"options": [
+				{
+					"value": "6",
+					"label": "6"
+				},
+				{
+					"value": "9",
+					"label": "9"
+				},
+				{
+					"value": "12",
+					"label": "12"
+				},
+				{
+					"value": "15",
+					"label": "15"
+				},
+				{
+					"value": "18",
+					"label": "18"
+				},
+				{
+					"value": "21",
+					"label": "21"
+				},
+				{
+					"value": "24",
+					"label": "24"
+				}
+			],
+			"default": "24" 
+		},
+		{
+			"type": "select",
+			"id": "alignment",
+			"label": "Header alignment",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "center"
+		}
+	],
+	"blocks": [
+		{
+			"type": "header",
+			"name": "Header",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Header",
+					"default": "Talk about your brand"
+				}
+			]
+		},
+		{
+			"type": "subheader",
+			"name": "Subheader",
+			"settings": [
+				{
+					"type": "text",
+					"id": "sub_header",
+					"label": "Subheader",
+					"default": "Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store."
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Featured Collection",
+			"blocks": [
+				{
+					"type": "header"
+				},
+				{
+					"type": "subheader"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

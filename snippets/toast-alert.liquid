@@ -1,0 +1,21 @@
+{%- comment -%}
+	Bootstrap Toast Alert HTML triggered by multiple scripts in store
+
+	Usage:
+	{%- render 'toast-alert' -%}
+
+{%- endcomment -%}
+<div aria-live="polite" aria-atomic="true" class="toast-wrapper d-flex justify-content-center align-items-center">
+	<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" data-bs-animation="true" data-warning-toast>
+		<div class="toast-header">
+			<strong class="me-auto">Warning</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body">Sorry, an Error occurred.</div>
+		<div class="toast-btns d-none">
+			<hr class="my-1">
+			<a href="#" class="btn btn-primary mx-1 float-end my-1" data-bs-dismiss="toast" aria-label="Close">NO</a>
+			<a href="#" class="btn btn-secondary float-end my-1" data-confirm-action>YES</a>
+		</div>
+	</div>
+</div>

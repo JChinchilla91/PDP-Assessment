@@ -1,0 +1,23 @@
+{%- comment -%}
+	Lazyloading library initialization - START
+
+	References: 
+		* https://github.com/verlok/vanilla-lazyload,
+		* https://www.smashingmagazine.com/2019/05/hybrid-lazy-loading-progressive-migration-native 
+		
+{%- endcomment -%}
+<script>
+	window.lazyLoadOptions = {
+		use_native: true,
+		callback_loaded: (img) => img.classList.add('loaded'),
+		callback_error: (img) => img.setAttribute('src', window.bluedgeusa.theme.noImage.url)
+	};
+	window.addEventListener(
+		"LazyLoad::Initialized",
+		function (e) {
+			// Set globally accesible vanilla-lazyload instance
+			window.lazyLoadInstance = e.detail.instance;
+		},
+		false
+	);
+</script>

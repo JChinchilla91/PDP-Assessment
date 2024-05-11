@@ -1,0 +1,101 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+<section class="customers">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-md-4 account-menu">
+				{%- render 'account-menu' -%}
+			</div>
+			<div class="col-12 col-md-8">
+				<div class="d-flex justify-content-between align-items-baseline align-items-lg-center">
+					<h2 class="text-center text-md-start">{{ 'customer.order.title' | t: name: order.name }}</h2>
+					<h5 class="order-date mb-0">{{ 'customer.order.date' | t: date: order.created_at | date: "%B %d, %Y %I:%M%p" }}</h5>
+				</div>
+				{%- if order.cancelled -%}
+					{%- assign cancelled_at = order.cancelled_at | date: "%B %d, %Y %I:%M%p" -%}
+					<p class="order-cancelled text-center"><em>{{ 'Order cancelled' | date: cancelled_at }} - {{ order.cancel_reason }}</em></p>	
+				{%- endif -%}
+				<div class="row d-none d-lg-flex text-center">
+					<div class="col-6 col-lg-6 py-3 text-start"><p>{{ 'customer.order.product' | t }}</p></div>
+					<div class="col-6 col-lg-2 py-3 text-center"><p>{{ 'customer.order.price' | t }}</p></div>
+					<div class="col-6 col-lg-2 py-3 text-center"><p>{{ 'customer.order.quantity' | t }}</p></div>
+					<div class="col-6 col-lg-2 py-3 text-end"><p>{{ 'customer.order.total' | t }}</p></div>
+				</div>
+				{%- for line_item in order.line_items -%}
+				<div class="row content align-items-start">
+					<div class="col-12 col-lg-6 pe-lg-5 pb-md-3 pb-0">
+						<a href="{{ line_item.url }}" class="d-block" title="{{ line_item.title }}">
+							<p class="product-title text-left">{{ line_item.title }}</p>
+							{% render 'responsive-image', image: line_item.image.src, image_class: "img-fluid", wrapper_class: "product-img-contain pb-4" %}
+						</a>
+						{%- if line_item.fulfillment -%}
+							{%- if line_item.fulfillment.tracking_number -%}
+								<p class="tracking-info">Tracking: <a href="{{ line_item.fulfillment.tracking_url }}" title="Line item tracking">{{ line_item.fulfillment.tracking_company }} #{{ line_item.fulfillment.tracking_number }}</a></p>
+							{%- endif -%}
+						{%- endif -%}
+					</div>
+					<div class="col-4 col-lg-2 text-lg-center py-1"><p class="title d-lg-none">Price: </p><p class="values">{% if line_item.price == 0 %}Free{% else %}{{ line_item.price | money_without_trailing_zeros }}{% endif %}</p></div>
+					<div class="col-4 col-lg-2 text-center py-1"><p class="title d-lg-none">Qty: </p><p class="values">{{ line_item.quantity }}</p></div>
+					<div class="col-4 col-lg-2 py-1 text-end"><p class="title d-lg-none">Total: </p><p class="values">{% if line_item.price == 0 %}Free{% else %}{{ line_item.quantity | times: line_item.price | money_without_trailing_zeros }}{% endif %}</p></div>
+				</div>
+				{%- endfor -%}
+				
+				<!-- TOTALS -->
+				<div class="content totals">
+					<div class="row py-1">
+						<div class="col text-start"><p class="title">{{ 'customer.order.subtotal' | t }}</p></div>
+						<div class="col text-end"><p>{{ order.subtotal_price | money }}</p></div>
+					</div>
+
+					{%- for discount in order.discounts -%}
+					<div class="row py-1">
+						<div class="col text-start"><p class="title">{{ discount.code }} {{ 'customer.order.discount' | t }}</p></div>
+						<div class="col text-end"><p>{{ discount.savings | money }}</p></div>
+					</div>
+					{%- endfor -%}
+				
+					{%- for shipping_method in order.shipping_methods -%}
+					<div class="row py-1">
+						<div class="col text-start"><span class="title">{{ 'customer.order.shipping' | t }}</span> <small>({{ shipping_method.title }})</small></div>
+						<div class="col text-end">{{ shipping_method.price | money }}</div>
+					</div>
+					{%- endfor -%}
+				
+					{%- for tax_line in order.tax_lines -%}
+					<div class="row py-1">
+						<div class="col text-start"><span class="title">{{ 'customer.order.tax' | t }}</span> <small>({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</small></div>
+						<div class="col text-end">{{ tax_line.price | money }}</div>
+					</div>
+					{%- endfor -%}
+				
+					<div class="row py-1">
+						<div class="col text-start"><span class="title total">{{ 'customer.order.total' | t }}</span></div>
+						<div class="col text-end">{{ order.total_price | money }} {{ order.currency }}</div>
+					</div>
+				</div>
+
+				{%- if customer.orders.size > 0 -%}
+				<!-- ADDRESSES -->
+				<div class="row">
+					<div class="col-12 pt-5 pt-lg-8">
+						<h2 class="account-title pb-3">{{ 'customer.addresses.title' | t }}</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 col-md-6 text-md-start pb-2 addresses">
+						<h3>{{ 'customer.order.billing_address' | t }}</h3>
+						{%- for order in customer.orders reversed limit: 1 -%}
+							{{ order.billing_address | format_address }}
+						{%- endfor -%}
+					</div>
+					
+					<div class="col-12 col-md-6 text-md-start pb-2 addresses">
+						<h3>{{ 'customer.order.shipping_address' | t }}</h3>
+						{{ customer.default_address | format_address }}
+					</div>
+				</div>
+				{%- endif -%}
+				<p class="pt-5 text-md-start"><a href="/account" title="{{ 'customer.account.return' | t }}">{{ 'customer.account.return' | t }}</a></p>
+			</div>
+		</div>
+	</div><!-- / .container -->
+</section>

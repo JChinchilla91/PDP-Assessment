@@ -1,0 +1,16 @@
+SchemaJsonFormat:
+  enabled: false
+  severity: style
+
+NestedSnippet:
+  enabled: true
+  max_nesting_level: 5
+
+ImgLazyLoading:
+  enabled: false
+
+UnusedSnippet:
+  enabled: false
+
+RemoteAsset:
+  enabled: false

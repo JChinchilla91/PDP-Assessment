@@ -1,0 +1,62 @@
+{%- comment -%}
+	Renders site breadcrumb links
+
+	Usage:
+	{%- render 'breadcrumb' -%}
+
+{%- endcomment -%}
+{%- unless template == 'index' or template == 'cart' -%}
+<div class="container">
+	<nav id="breadcrumb" role="navigation" aria-label="breadcrumbs">
+		<ol class="breadcrumb mb-0 py-3">
+			<li class="breadcrumb-item">
+				<a href="/" title="{{ shop.name }} Homepage">Home</a> 
+			</li>
+			{%- if template contains 'product' -%}
+				{%- if collection -%}
+					{%- if collection.handle -%}
+						{%- capture url -%}/collections/{{ collection.handle }}{%- endcapture -%}
+						<li class="breadcrumb-item">{{ collection.title | link_to: url }}</li>
+					{%- endif -%}
+				{%- endif -%}
+				{%- liquid
+					for collection in product.collections limit: 1
+						assign collection_title = collection.title
+						assign collection_url = collection.url
+					endfor
+				-%}
+				{%- unless collection -%}
+					{%- if collection_title != blank -%}
+					<li class="breadcrumb-item">
+						<a href="{{ collection_url }}" title="{{ collection_title }}">{{ collection_title }}</a> 
+					</li>
+					{%- endif -%}
+				{%- endunless -%}
+				<li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+				{%- elsif template contains 'collection' and collection.handle -%}		
+					{%- if current_tags -%}
+						{%- capture url -%}/collections/{{ collection.handle }}{%- endcapture -%}
+						{{ collection.title | link_to: url }}
+						<li class="breadcrumb-item active" aria-current="page">{{ current_tags | join: " + " }}</li>
+						{%- else -%}
+						<li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+				{%- endif -%}
+			{%- elsif template == 'blog' -%}
+				{%- if current_tags -%}
+					<li class="breadcrumb-item active" aria-current="page">{{ blog.title | link_to: blog.url }}</li>
+					<li class="breadcrumb-item active" aria-current="page">{{ current_tags | join: " + " }}</li>
+				{%- else -%}
+					<li class="breadcrumb-item active" aria-current="page">{{ blog.title }}</li>
+				{%- endif -%}	
+			{%- elsif template == 'article' -%}
+				<li class="breadcrumb-item" aria-current="page">{{ blog.title | link_to: blog.url }}</li>
+				<li class="breadcrumb-item" aria-current="page">{{ article.title }}</li>
+			{%- elsif template contains 'page' -%}
+				<li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+			{%- else -%}
+				<li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+			{%- endif -%}
+		</ol>
+	</nav>
+</div>
+{%- endunless -%}

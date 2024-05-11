@@ -1,0 +1,13 @@
+docs/
+src/
+emails/
+pages/
+node_modules/
+package.json
+package-lock.json
+*.js
+*.json
+*.md
+.vscode
+.gitignore
+.nvmrc

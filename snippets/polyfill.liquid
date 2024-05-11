@@ -1,0 +1,14 @@
+{%- comment -%}
+	List polyfills needed for older browsers - IE 12 and older is never supported.
+	
+	Needed polyfill:
+	- Array.from
+	- Array.prototype.forEach
+	- Object.assign
+	- fetch
+	- Promise
+	- CustomEvent
+	- URLSearchParams
+	
+{%- endcomment -%}
+<script src="//cdn.polyfill.io/v3/polyfill.min.js?features=es6&fetch,Object.assign,Promise,CustomEvent,URLSearchParams" defer></script>

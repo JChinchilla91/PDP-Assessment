@@ -1,0 +1,111 @@
+{%- comment -%}
+	Renders product grid
+	col-{xx} are used to set define the number of column for a give breakpoint
+	 - Used for CSS classes calculation
+	 - Used for Native Lazy loading 'sizes' calculations
+
+	Accepts:
+	- product: {Object} Shopify product object
+	- classes: {String} extra classes to pass on the column
+	- col_sm {Number} (optional)
+	- col_md {Number} (optional)
+	- col_lg {Number} (optional)
+	- col_xl {Number} (optional)
+	- col_xxl {Number} (optional)
+	- show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional)
+
+	Usage:
+	{%- render 'product-grid', product: product, classes: 'px-3', col_sm: 2, col_md: 3, col_lg: 4 -%}
+
+{%- endcomment -%}
+{%- liquid
+	assign image = product.featured_image
+
+	comment
+	# Defined columns breking points
+	endcomment
+
+	assign columns = 'col'
+	if col_sm
+		assign calc = 12 | divided_by: col_sm | floor
+		assign columns = columns | append: ' col-' | append: calc
+	endif
+	if col_md
+		assign calc = 12 | divided_by: col_md | floor
+		assign columns = columns | append: ' col-md-' | append: calc
+	endif
+	if col_lg
+		assign calc = 12 | divided_by: col_lg | floor
+		assign columns = columns | append: ' col-lg-' | append: calc
+	endif
+	if col_xl
+		assign calc = 12 | divided_by: col_xl | floor
+		assign columns = columns | append: ' col-xl-' | append: calc
+	endif
+	if col_xxl
+		assign calc = 12 | divided_by: col_xxl | floor
+		assign columns = columns | append: ' col-xxl-' | append: calc
+	endif
+-%}
+{%- if product and product != blank -%}
+	<div class="{{ columns }} pb-3{% if classes %} {{ classes }}{% endif %}">
+		<a href="{{ product.url }}" class="collection-product" title="{{ product.title | escape }}">
+			<div class="product-wrapper product-img-wrapper{% if product.media[1] != null and show_secondary_image %} media-hover-effect{% endif %}">
+				{%- render 'responsive-image',
+					image: image,
+					image_class: 'img-fluid',
+					col_sm: col_sm,
+					col_md: col_md,
+					col_lg: col_lg,
+					col_xl: col_xl,
+					col_xxl: col_xxl
+				-%}
+				{%- if product.media[1] != null and show_secondary_image -%}
+					{%- render 'responsive-image',
+						image: product.media[1],
+						wrapper_class: 'secondary-image',
+						image_class: 'img-fluid',
+						col_sm: col_sm,
+						col_md: col_md,
+						col_lg: col_lg,
+						col_xl: col_xl,
+						col_xxl: col_xxl
+					-%}
+				{%- endif -%}
+			</div>
+		</a>
+		<div class="text-center">
+			<div class="row">
+				<div class="col">
+					<p class="product-title text-uppercase py-2 mb-0"><a href="{{ product.url }}" title="{{ product.title | escape }}">{{ product.title }}</a></p>
+					{%- render 'product-price', context: 'product', product: product.first_available_variant -%}
+					{%- if settings.quickshop_enabled == true -%}
+						<a href="{{ product.url }}" title="Add to Cart {{ product.title }}" data-quickshop-handle="{{ product.handle }}">{{ 'products.product.add_to_cart' | t }}</a>
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- else -%}
+	{%- comment -%} Placeholder for Backend {%- endcomment -%}
+	<div class="{% if classes != blank %}{{ classes }}{% else %}col-12 col-md-6 col-lg-4{% endif %} pb-3">
+		<a href="#" class="collection-product" title="example-product-title">
+			<div class="product-wrapper product-img-wrapper">
+				<div class="lazywrapper">
+					{{ 'product-1' | placeholder_svg_tag: 'lazyload img-fluid' }}
+					<span class="image-preloader"></span>
+				</div>
+			</div>
+		</a>
+		<div class="text-center">
+			<div class="row">
+				<div class="col">
+					<p class="product-title text-uppercase py-2 mb-0">
+						<a href="#" title="example-product-title">Example product title</a>
+					</p>
+					<div class="price">{{ 1900 | money }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}

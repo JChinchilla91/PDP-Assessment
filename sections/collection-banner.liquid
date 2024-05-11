@@ -1,0 +1,79 @@
+{%- render 'breadcrumb' -%}
+{%- render 'hero-section' 
+	overlay_color: section.settings.hero_overlay_color,
+	overlay_opacity: section.settings.range_opacity,
+	blocks: section.blocks
+-%}
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "class": "collection-banner",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color",
+      "id": "hero_overlay_color",
+      "label": "Hero Overlay Color"
+    },
+    {
+      "type": "range",
+      "id": "range_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Opacity",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Hero Image",
+      "type": "image",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Banner Image"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collections"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_image",
+          "label": "Banner Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_image_mobile",
+          "label": "Mobile Image"
+        },
+        {
+          "type": "text",
+          "id": "hero_heading",
+          "label": "Banner Heading"
+        },
+        {
+          "type": "text",
+          "id": "hero_sub_heading",
+          "label": "Banner Subheading"
+        },
+        {
+          "type": "text",
+          "id": "hero_btn_text",
+          "label": "Banner Button Text"
+        },
+        {
+          "type": "url",
+          "id": "hero_btn_link",
+          "label": "Banner Button Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

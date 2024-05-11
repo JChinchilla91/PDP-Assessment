@@ -1,0 +1,103 @@
+{%- render 'breadcrumb' -%}
+<div class="container">
+	<article class="rte">
+		<div class="row justify-content-center align-items-center my-5">
+			{%- if article.image != blank -%}
+			<div class="col-12">
+				{%- render 'responsive-image', image: article.image, image_class: 'img-fluid' -%}
+			</div>
+			{%- endif -%}
+			<div class="col-12">
+				<!-- Article header and excerpt -->
+				<header class="my-4">
+				<h1>{{ article.title }}</h1>
+				</header>
+				{%- for block in section.blocks -%}
+					{%- case block.type -%}
+						{%- when 'article_block_text' -%}
+						{{ block.settings.article_block_text }}
+						{%- when 'image_extra' -%}
+						<div class="mx-auto w-{{ block.settings.image_width }}">
+							{%- render 'responsive-image', image: block.settings.image_extra, image_class: 'img-fluid' -%}
+						</div>
+					{%- endcase -%}
+				{%- endfor -%}
+				<!-- Article excerpt -->
+				{%- if article.excerpt != blank -%}
+					<p class="h5">{{ article.excerpt }}</p>
+				{%- endif -%}
+				<!-- Article content -->
+				<section>
+				<p>{{ article.content }}</p>
+				</section>
+			</div>
+		</div>
+	</article>
+</div>
+{%- for tag in article.tags -%}
+	{%- comment -%} Indicator for exiting out of nested loop once we find a single related article {%- endcomment -%}
+	{%- liquid
+		assign break_loop = false
+		for relArticle in blog.articles 
+		unless relArticle.id == article.id 
+			if relArticle.tags contains tag
+			render 'related-article'
+			break
+			assign break_loop = true
+			endif 
+		endunless
+		endfor
+
+		if break_loop
+		break
+		endif
+	-%}
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Article",
+  "class": "section-article",
+  "tag": "section",
+  "blocks": [
+	{
+	  "type": "article_block_text",
+	  "name": "Text Block",
+	  "settings": [
+		{
+		  "type": "inline_richtext",
+		  "id": "article_block_text",
+		  "label": "Text Block"
+		}
+	  ]
+	},
+	{
+	  "type": "image_extra",
+	  "name": "Extra Image",
+	  "settings": [
+		{
+		  "type": "image_picker",
+		  "id": "image_extra",
+		  "label": "Image"
+		},
+		{
+		  "type": "select",
+		  "id": "image_width",
+		  "label": "Image Width",
+		  "options": [
+			{
+			  "value": "100",
+			  "label": "100%"
+			},
+			{
+			  "value": "75",
+			  "label": "75%"
+			}
+		  ],
+		  "default": "100"
+		}
+	  ]
+	}
+  ]
+}
+{% endschema %}

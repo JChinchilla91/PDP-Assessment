@@ -1,0 +1,73 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+<section class="customers">	
+	<div class="account-page">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-4 account-menu">{%- render 'account-menu' -%}</div>
+				<div class="col-12 col-md-8">
+					<h2 class="text-center text-md-start">{{ 'customer.orders.title' | t }}</h2>
+					{%- paginate customer.orders by 20 -%}
+						{%- if customer.orders.size != 0 -%}
+							<div class="row d-none d-lg-flex">
+								<div class="col-6 col-lg py-3 order-id">{{ 'customer.orders.order_number' | t }}</div>
+								<div class="col-6 col-lg py-3">{{ 'customer.orders.date' | t }}</div>
+								<div class="col-6 col-lg py-3">{{ 'customer.orders.payment_status' | t }}</div>
+								<div class="col-6 col-lg py-3">{{ 'customer.orders.fulfillment_status' | t }}</div>
+								<div class="col-6 col-lg py-3 text-center text-lg-end">{{ 'customer.orders.total' | t }}</div>
+							</div>
+							{%- for order in customer.orders -%}
+								<div class="row orders">
+									<div class="col-6 col-lg py-1 grey text-start"><span class="title d-lg-none">ID: </span><a href="{{ order.customer_url }}" class="liner" title="View order details">{{ order.name }}</a></div>
+									<div class="col-6 col-lg py-1 text-end text-lg-start"><span class="title d-lg-none">{{ 'customer.orders.date' | t }}: </span>{{ order.created_at | time_tag: "%b %d %Y" }}</div>
+									<div class="col-6 col-lg py-1 text-start grey"><span class="title d-lg-none">{{ 'customer.orders.payment_status' | t }}: </span>{{ order.financial_status_label }}</div>
+									<div class="col-6 col-lg py-1 text-end text-lg-start"><span class="title d-lg-none">{{ 'customer.orders.fulfillment_status' | t }}: </span>{{ order.fulfillment_status_label }}</div>
+									<div class="col-12 col-lg py-1 text-end">{{ order.total_price | money }}</div>
+								</div>
+							{%- endfor -%}
+						{%- else -%}
+							<p class="text-center text-md-start pb-3">{{ 'customer.orders.none' | t }}</p>
+						{%- endif -%}
+		
+						{%- if paginate.pages > 1 -%}
+							{%- render 'pagination', paginate: paginate -%}
+						{%- endif -%}
+					{%- endpaginate -%}
+					{%- if customer.orders.size > 0 -%}
+					<!-- ADDRESSES -->
+					<div class="row">
+						<div class="col-12 pt-5">
+							<h2 class="pb-3">{{ 'customer.addresses.title' | t }}</h2>
+						</div>
+					</div>
+					<div class="row">
+						{%- liquid
+							assign billing_address = blank
+							for order in customer.orders
+								if order.billing_address.street != blank and order.billing_address.city != blank and order.billing_address.zip != blank
+									assign billing_address = order.billing_address
+									break
+								endif
+							endfor 
+						-%}
+						{%- if billing_address != blank -%}
+							<div class="col-12 col-md-6 text-md-start pb-4 addresses">
+								<h3>{{ 'customer.order.billing_address' | t }}</h3>
+								{{ billing_address | format_address }}
+							</div>
+						{%- endif -%}
+						<div class="col-12 col-md-6 text-md-start pb-4 addresses">
+							<h3>{{ 'customer.order.shipping_address' | t }}</h3>
+							{{ customer.default_address | format_address }}
+						</div>
+					</div>
+					{%- endif -%}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 text-center account-menu">
+					{%- render 'account-menu', bottom: true -%}
+				</div>
+			</div>	
+		</div><!-- / .container -->
+	</div>
+</section>

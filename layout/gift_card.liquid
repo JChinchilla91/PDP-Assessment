@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="{{ shop.locale }}">
+	<head>
+		{%- liquid 
+			comment
+			# Store metadata attributes
+			endcomment
+			render 'metadata'
+			
+			comment
+			# Inline CSS
+			endcomment
+			render 'inline-css'
+		-%}
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		{{ 'Larken-Bold.woff2' | asset_url | preload_tag: as: 'script', type: 'font/woff2', as: 'font', crossorigin: '' }}
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+		{{ 'bootstrap.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ 'gift-card.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ content_for_header }}
+		<script src="{{ 'vanilla-lazyload.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		<script src="{{ 'theme.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	</head>
+	<body class="template-{{ template.name | handleize }} text-center">
+		<header class="container pt-4 pb-2">
+			<div class="row align-items-center justify-content-center">
+				<div class="col">
+					<div>
+						<h1>{{ gift_card.balance | money_with_currency }}</h1>
+						{%- if gift_card.enabled == false or gift_card.expired -%}<p>{{ 'gift_cards.issued.expired' | t }}</p>{%- endif -%}
+					</div>
+					{% if gift_card.expires_on %}
+						{%- assign gift_card_expiration_date = gift_card.expires_on | date: '%B %e, %Y' -%}
+						<p>{{ 'gift_cards.issued.expiration_date' | t: expires_on: gift_card_expiration_date }}</p>
+					{% endif %}
+				</div>
+			</div>
+		</header>
+		<main class="pb-4 pt-2">
+			{{ content_for_layout }}
+		</main>
+	</body>
+	{%- liquid
+		comment
+		# QR Code generation	
+		endcomment
+		render 'gift-card-qr-code'
+
+		comment
+		# Vanilla lazyload scripts
+		endcomment
+		render 'vanilla-lazyload'
+	-%}
+</html>
