@@ -142,3 +142,7 @@ img.error { opacity: 0.5 } // 'placeholder.jpg' is used elsewhere in the theme n
 
 .nav-link { font-family: 'Favorit'; }
 .title { font-family: 'Favorit'; }
+
+.flickity-page-dot {
+	&:focus { box-shadow: none; }
+}

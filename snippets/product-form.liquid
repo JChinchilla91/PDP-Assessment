@@ -22,35 +22,12 @@
 -%}
 {{ 'product-form.css' | asset_url | stylesheet_tag }}
 {%- form 'product', product, data-productid: product.id -%}
-	<h1>{{ product.title }}</h1>
-	{%- for block in section.blocks -%}
-		{%- case block.type -%}
-			{%- when '@app' -%}
-				{%- render block -%}
-			{%- comment -%} Metafield: Style {%- endcomment -%}
-			{%- when 'style' -%}
-				<p>Style: {{ product.metafields.theme.style | metafield_text }}</p>
-			{%- comment -%} Metafield: Limited Edition {%- endcomment -%}
-			{%- when 'limitedEdition' -%}
-				<p {{ block.shopify_attributes }}>Limited Edition: {{ block.settings.limited_edition }} {{ block.settings.limited_edition | pluralize: 'unit', 'units' }}</p>
-			{%- when 'text' -%}
-				<p {{ block.shopify_attributes }}>{{- block.settings.text -}}</p>
-			{%- when 'sku' -%}
-				<p {{ block.shopify_attributes }}>{{- block.settings.sku -}} <span data-variant-sku>{{ current_variant.sku }}</span></p>
-			{%- when 'rating' -%}
-				{%- render 'product-ratings', product: product, block: block -%}
-			{%- comment -%} MetaObject: Product Extra Content Accordion  {%- endcomment -%}
-			{%- when 'accordion' -%}
-				{%- render 'product-extra-info' with product as product -%}
-		{%- endcase -%}
-	{%- endfor -%}
-	{%- if super_title != blank -%}
-		<h2>{{ super_title }}</h2>
-	{%- endif -%}
-
-	{%- comment -%} Display Price {%- endcomment -%}
-	{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
-
+	<div class="price-title-wrapper d-none d-lg-block">
+		<h1 class="d-none d-lg-block">{{ product.title }}</h1>
+		{%- comment -%} Display Price {%- endcomment -%}
+		{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
+	</div>
+	
 	<div class="rte">{{ product.description }}</div>
 	{%- unless product.has_only_default_variant -%}
 		{%- comment -%}

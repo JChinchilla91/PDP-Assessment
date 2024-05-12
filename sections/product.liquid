@@ -20,8 +20,16 @@
 			</div>
 		</div>
 	</div>
-	<div class="row image-slider" data-generic-slider data-loop="false" data-arrows="false" data-adaptive-height="false">
+	<div class="row image-slider d-lg-none" data-generic-slider data-loop="false" data-arrows="false" data-adaptive-height="false">
 		{%- render 'product-gallery' with product as product -%}
+	</div>
+	<div class="row">
+		<div class="col-lg-7 d-none d-lg-block">
+			{%- render 'product-gallery' with product as product -%}
+		</div>
+		<div class="col-lg-5">
+			{%- render 'product-form' with product as product, current_variant: current_variant -%}
+		</div>
 	</div>
 </div>
 

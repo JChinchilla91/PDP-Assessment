@@ -5,21 +5,26 @@
 /* ========== 			        	PRODUCT PAGE 	   			========== */
 /* ======================================================================= */
 .template-product {
-	.container { --bs-gutter-x: 2.5rem; }
+	.container, .row { --bs-gutter-x: 2.5rem; }
 	.title-wrapper {
 		.review-wrapper {
 			.reviews { font-size: .75rem; font-weight: 700; }
 		}
 	}
 	[data-price-wrapper] {
-		font-size: 1.4375rem; font-weight: 700; margin-top: .375rem;
+		font-size: 1.4375rem; font-weight: 700; margin-top: .625rem;
 		[data-discount-off] {
 			background-color: $light-green; font-size: 1rem; height: fit-content; text-transform: uppercase; padding: .25rem .5rem;
 		}
 	}
 	[data-generic-slider]:after { content: 'flickity'; display: none; } // Enable Flickity
 	.image-slider {
-		.image { width: 83%; }
+		margin-left: 0;
+		.image { padding-right: .75rem; }
+		.flickity-page-dots {
+			bottom: -20px; justify-content: start; padding-left: 0;
+			.flickity-page-dot { margin-left: 0; margin-right: 18px; }
+		}
 	}
 	.product-thumbnail video, .product-thumbnail iframe { width: 100%; }
 	.product-thumbnail iframe { min-height: 18.75rem; }
