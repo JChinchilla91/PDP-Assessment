@@ -1,10 +1,27 @@
-<div class="container">
+<script src="{{ 'generic-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{{ 'product.css' | asset_url | stylesheet_tag: preload: true }}
+
+
+<div class="container" data-section-id="{{ section.id }}" data-section-type="genericSlider">
 	<div class="row">
 		<div class="col-12">
-			<div class="title-wrapper">
-				
+			<div class="title-wrapper mb-3">
+				<h1>{{ product.title }}</h1>
+				<div class="review-wrapper d-flex align-items-center">
+					<div class="d-flex">
+						{%- for i in (1..5) -%}
+							{%- render 'icons' with 'star' -%}
+						{%- endfor -%}
+					</div>
+					<a class="reviews" href="#" title="Reviews">150 Reviews</a>
+				</div>
+				{%- comment -%} Display Price {%- endcomment -%}
+				{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
 			</div>
 		</div>
+	</div>
+	<div class="row image-slider" data-generic-slider data-loop="false" data-arrows="false" data-adaptive-height="false">
+		{%- render 'product-gallery' with product as product -%}
 	</div>
 </div>
 

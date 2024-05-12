@@ -3,21 +3,49 @@
 /*===========================================================*/
 
 // Color system
-$red			:#dc3545;
-$danger			: $red;
+$main-green				: #01483A;
+$secondary-green		: #1C473B;
+$light-green			: #ADC2BD;
+$gold					: #FFBF3F;
+$accent-gold			: #F5C158;
+$white					: #FFFFFF;
+
+// Options
+$enable-rounded					: false;
+$enable-cssgrid					: true;
+$enable-rfs						: false;
+$enable-important-utilities		: false;
 
 // Breadcrumbs
-$breadcrumb-bg			: transparent;
+$breadcrumb-bg					: transparent;
 
-// Form validation
-$form-feedback-invalid-color			: $danger;
-$form-feedback-icon-invalid-color		: $form-feedback-invalid-color;
-$form-feedback-icon-invalid				: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='#{$form-feedback-icon-invalid-color}' viewBox='0 0 12 12'><circle cx='6' cy='6' r='4.5'/><path stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/><circle cx='6' cy='8.2' r='.6' fill='#{$form-feedback-icon-invalid-color}' stroke='none'/></svg>");
-
-// scss-docs-start form-validation-states
-$form-validation-states: (
-  "invalid": (
-	"color": $form-feedback-invalid-color,
-	"icon": $form-feedback-icon-invalid
-  )
+// Spacing
+$spacer: 1rem;
+$spacers: (
+	0: 0,
+	1: $spacer * .25,
+	2: $spacer * .5,
+	3: $spacer,
+	4: $spacer * 1.5,
+	5: $spacer * 3,
+	6: $spacer * 5,
+	7: $spacer * 7,
+	8: $spacer * 9
 );
+
+// Fonts
+$font-weight-semibold			: 500;
+$font-weight-bold				: 700;
+$font-size-base					: 1rem;
+$headings-font-weight			: 400;
+
+$body-color						: $main-green;
+
+// Headings
+$font-family-headings			: "favorit", ui-sans-serif, system-ui;
+$font-family-sans-serif			: "favorit", ui-sans-serif, system-ui;
+
+$h1-font-size					: 1.5rem;
+
+// Links
+$link-color						: $main-green;

@@ -252,7 +252,8 @@
 	  "from_text_html": "From {{ price }}",
 	  "quantity": "Quantity",
 	  "add_to_cart": "Add to Cart",
-	  "add_to_cart_loading": "Adding..."
+	  "add_to_cart_loading": "Adding...",
+	  "percentage_off": "% Off"
 	},
 	"facets": {
 	  "apply": "Apply",

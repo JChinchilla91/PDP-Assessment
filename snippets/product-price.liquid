@@ -40,10 +40,20 @@
 </div>
 {%- endif -%}
 {%- if context == 'product-page' -%}
-<div data-price-wrapper>
-	{%- assign price_text = product.price | money -%}	
+{%- liquid
+	if product.compare_at_price > product.price
+		assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
+	endif
+-%}
+<div class="d-flex align-items-center" data-price-wrapper>
+	{%- assign price_text = product.price | money_without_trailing_zeros -%}	
 	<span data-product-price>{{ price_text }}</span>
-	<span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span><s class="compare-price" data-compare-price>{{ product.compare_at_price | money }}</s>
+	<span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span><s class="ms-2 compare-price" data-compare-price>{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+	{%- if discount != blank -%}
+		<div class="ms-3 p-2" data-discount-off>
+			{{ discount }}{{ 'products.product.percentage_off' | t }}
+		</div>
+	{%- endif -%}
 </div>
 {%- endif -%}
 {%- if context == 'item' -%}
