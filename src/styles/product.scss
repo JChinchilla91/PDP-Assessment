@@ -38,6 +38,24 @@
 	}
 	.product-thumbnail video, .product-thumbnail iframe { width: 100%; }
 	.product-thumbnail iframe { min-height: 18.75rem; }
+
+	@include break ($lg) {
+		.container, .row { --bs-gutter-x: 1.5rem; }
+		.desktop-gallery {
+			display: flex;
+			flex-wrap: wrap;
+			margin-top: calc(-1*var(--bs-gutter-y));
+			margin-right: calc(-.5*var(--bs-gutter-x));
+			margin-left: calc(-.5*var(--bs-gutter-x));
+			> * {
+				flex-shrink: 0;
+				max-width: 100%;
+				padding-right: calc(var(--bs-gutter-x)*.5);
+				padding-left: calc(var(--bs-gutter-x)*.5);
+				margin-top: var(--bs-gutter-y);
+			}
+		}
+	}
 }
 
 /* ======================================================================= */

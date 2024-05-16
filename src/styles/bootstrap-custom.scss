@@ -49,3 +49,11 @@ $h1-font-size					: 1.5rem;
 
 // Links
 $link-color						: $main-green;
+
+// scss-docs-start theme-color-variables
+$primary						: $main-green;
+$secondary						: $accent-gold;
+$light							: $white;
+
+// Buttons
+$btn-disabled-color				: $main-green;

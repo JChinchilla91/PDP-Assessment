@@ -1,9 +1,10 @@
 <script src="{{ 'generic-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
 {{ 'product.css' | asset_url | stylesheet_tag: preload: true }}
 
+{%- assign current_variant = product.selected_or_first_available_variant -%}
 
 <div class="container" data-section-id="{{ section.id }}" data-section-type="genericSlider">
-	<div class="row">
+	<div class="row d-lg-none">
 		<div class="col-12">
 			<div class="title-wrapper mb-3">
 				<h1>{{ product.title }}</h1>
@@ -24,7 +25,7 @@
 		{%- render 'product-gallery' with product as product -%}
 	</div>
 	<div class="row">
-		<div class="col-lg-7 d-none d-lg-block">
+		<div class="col-lg-7 d-none desktop-gallery">
 			{%- render 'product-gallery' with product as product -%}
 		</div>
 		<div class="col-lg-5">

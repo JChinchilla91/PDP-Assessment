@@ -23,7 +23,15 @@
 {{ 'product-form.css' | asset_url | stylesheet_tag }}
 {%- form 'product', product, data-productid: product.id -%}
 	<div class="price-title-wrapper d-none d-lg-block">
-		<h1 class="d-none d-lg-block">{{ product.title }}</h1>
+		<h1>{{ product.title }}</h1>
+		<div class="review-wrapper d-flex align-items-center">
+			<div class="d-flex">
+				{%- for i in (1..5) -%}
+					{%- render 'icons' with 'star' -%}
+				{%- endfor -%}
+			</div>
+			<a class="reviews" href="#" title="Reviews">150 Reviews</a>
+		</div>
 		{%- comment -%} Display Price {%- endcomment -%}
 		{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
 	</div>
@@ -34,54 +42,33 @@
 			If the Option name contains `size` we display Buttons
 		{%- endcomment -%}
 		{%- for option in product.options_with_values -%}
-			{%- liquid
-				assign option_index = forloop.index0
-				assign option_name = option.name | downcase 
-				assign is_custom_select = false
-				if  option_name contains 'size'
-					assign is_custom_select = true
-				endif
-			-%}
-			{%- if is_custom_select == true -%}
-				<p class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</p>
-				<div class="selector-wrapper text-start{% if is_pdp == false %} d-none{% endif %}" data-custom-selector>
-					<ul>
+				<div class="selector-wrapper mb-1">
+					{%- assign name = option.name | downcase -%}
+					<label class="form-label{% if name contains 'size' %} mb-1{% else %} mb-3{% endif %}" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}:</label>
+					<ul class="d-flex flex-wrap">
 						{%- for value in option.values -%}
-						<li class="{% if option.selected_value == value %}selected{% endif %}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-value="{{ value | escape }}" data-selected="{% if option.selected_value == value %}true{% else %}false{% endif %}" data-single-option-selector>
-							<span class="option-block">{{ value }}</span>
-						</li>
+							<li class="{% if name contains 'size' %} col-2 size{% else %}col-6{% endif %}" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector>{{ value }}</li>
 						{%- endfor -%}
 					</ul>
-				</div>
-			{%- else -%}
-				<div class="selector-wrapper js">
-					<label class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</label>
+					<!-- <label class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</label>
 					<select class="form-select" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector>
 						{%- for value in option.values -%}
 						<option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
 						{%- endfor -%}
-					</select>
+					</select> -->
 				</div>
-			{%- endif -%}
 		{%- endfor -%}
 	{%- endunless -%}
-	{%- comment -%} 
-		# Classic Quantity - uncomment if needed
-		<label class="form-label" for="Quantity">{{ 'products.product.quantity' | t }}</label>
-		<input class="form-control mb-3" type="number" id="Quantity" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: item.variant.quantity_rule.min }}" min="{{ current_variant.quantity_rule.min | default: 1 }}"{% if current_variant.quantity_rule.max != blank %} max="{{ current_variant.quantity_rule.max | default: 15 }}"{%- endif -%}>
-	{%- endcomment -%}
-	<div class="quantity-wrapper w-100 d-flex align-items-center justify-content-between py-4" data-dynamic-qty>
-		<label class="form-label mb-0 me-4" for="Quantity">{{ 'products.product.quantity' | t }}</label>
-		{%- render 'quantity-buttons', 
-			item: product, 
-			variant: current_variant, 
-			context: 'pdp' 
-		-%}
+	<div class="btn-wrapper mt-4 pt-2">
+		<button class="btn btn-primary position-relative d-flex justify-content-center w-100" type="submit" name="add" data-add-to-cart disabled="disabled">
+			<span data-add-to-cart-text>
+				{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+			</span>
+			<span class="price">
+				{{ current_variant.price | money_without_trailing_zeros }}
+			</span>
+			<span class="loading-copy pulse">{{ 'products.product.add_to_cart_loading' | t }}</span>
+		</button>
 	</div>
-	<button class="btn btn-primary position-relative d-flex justify-content-center" type="submit" name="add" data-add-to-cart{% unless current_variant.available %} disabled="disabled"{% endunless %}>
-		<span data-add-to-cart-text>
-			{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
-		</span>
-		<span class="loading-copy pulse">{{ 'products.product.add_to_cart_loading' | t }}</span>
-	</button>
+	
 {%- endform -%}
