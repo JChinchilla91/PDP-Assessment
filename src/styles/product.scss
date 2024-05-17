@@ -38,6 +38,13 @@
 	}
 	.product-thumbnail video, .product-thumbnail iframe { width: 100%; }
 	.product-thumbnail iframe { min-height: 18.75rem; }
+	.guarantee-wrapper {
+		column-gap: .5rem; padding-top: .6875rem; padding-bottom: .6875rem;
+		p { line-height: 1.1875rem; letter-spacing: -0.01em; }
+	}
+	.icon-wrapper {
+		background-color: $accent-gold; border-radius: 100%;  width: 126px; height: 126px;
+	}
 
 	@include break ($lg) {
 		.container, .row { --bs-gutter-x: 1.5rem; }
