@@ -41,4 +41,12 @@
 	.btn.btn-primary {
 		column-gap: 1rem; font-size: 1.25rem; padding-top: .6875rem; padding-bottom: .6875rem
 	}
+
+	@include break ($lg) {
+		.selector-wrapper ul {
+			li {
+				&.size { padding-top: .25rem; padding-bottom: .25rem; width: auto; margin-right: .375rem; width: 2.625rem; }
+			}
+		}
+	}
 }

@@ -66,10 +66,27 @@
 				margin-top: var(--bs-gutter-y);
 			}
 		}
+		.price-title-wrapper {
+			h1 { font-size: 1.75rem; }
+		}
+		[data-price-wrapper] {
+			font-size: 1.75rem;
+			[data-discount-off] {
+				font-size: 1.125rem;
+			}
+		}
+		.product-description {
+			p { font-size: 1.25rem; }
+			ul { max-width: 64%; }
+		}
+		.guarantee-wrapper {
+			p { font-size: 1.5rem; }
+		}
 
 		.icons {
-			.icons-wrapper {
-				.col-lg-1 { width: 11.333%; }
+			.col-lg-2 { width: 15.667%; }
+			.icon-wrapper {
+				width: 200px; height: 200px;
 			}
 		} 
 	}

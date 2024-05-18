@@ -36,7 +36,7 @@
 		{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
 	</div>
 	
-	<div class="rte product-description">{{ product.description }}</div>
+	<div class="rte product-description pt-lg-4">{{ product.description }}</div>
 	{%- unless product.has_only_default_variant -%}
 		{%- comment -%}
 			If the Option name contains `size` we display Buttons

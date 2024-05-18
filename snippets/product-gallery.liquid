@@ -14,7 +14,7 @@
 -%}
 {%- if product.images.size > 1 -%}
 	{%- for image in product.images -%}
-		<div class="col-11 col-lg-6 image pb-2">
+		<div class="col-11 col-lg-6 image pb-2 pb-lg-5">
 			{%- render 'responsive-image', image: image, image_class: 'img-fluid' -%}
 		</div>
 	{%- endfor -%}

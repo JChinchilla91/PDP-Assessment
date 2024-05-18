@@ -26,10 +26,10 @@
 		{%- render 'product-gallery' with product as product -%}
 	</div>
 	<div class="row">
-		<div class="col-lg-7 d-none desktop-gallery">
+		<div class="col-lg-8 d-none desktop-gallery">
 			{%- render 'product-gallery' with product as product -%}
 		</div>
-		<div class="col-lg-5">
+		<div class="col-lg-4 ps-lg-4">
 			{%- render 'product-form' with product as product, current_variant: current_variant -%}
 			<div class="guarantee-wrapper d-flex justify-content-center">
 				{%- render 'icons' with 'package' -%}
@@ -38,10 +38,10 @@
 		</div>
 	</div>
 	{%- if icons.size > 0 -%}
-		<div class="row icons mt-5">
+		<div class="row icons justify-content-lg-center mt-5">
 			{%- for block in icons -%}
 				{%- if block.settings.icon != blank and block.settings.title != blank -%}
-					<div class="col-6 col-lg-2 d-flex flex-column mb-2">
+					<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0">
 						<div class="icon-wrapper d-flex justify-content-center align-items-center">
 							{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
 						</div>
