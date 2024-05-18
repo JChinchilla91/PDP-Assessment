@@ -21,33 +21,21 @@
 	endif
 -%}
 {{ 'product-form.css' | asset_url | stylesheet_tag }}
-{%- form 'product', product, data-productid: product.id -%}
-	<div class="price-title-wrapper d-none d-lg-block">
-		<h1>{{ product.title }}</h1>
-		<div class="review-wrapper d-flex align-items-center">
-			<div class="d-flex">
-				{%- for i in (1..5) -%}
-					{%- render 'icons' with 'star' -%}
-				{%- endfor -%}
-			</div>
-			<a class="reviews" href="#" title="Reviews">150 Reviews</a>
-		</div>
-		{%- comment -%} Display Price {%- endcomment -%}
-		{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
-	</div>
-	
-	<div class="rte product-description pt-lg-4">{{ product.description }}</div>
+<form class="product-form" action="/card/add" method="post">
+	<input type="hidden" name="id" :value="currentVariantId" data-variant-id>
+	<input type="hidden" name="quantity" value="1">
 	{%- unless product.has_only_default_variant -%}
 		{%- comment -%}
 			If the Option name contains `size` we display Buttons
 		{%- endcomment -%}
 		{%- for option in product.options_with_values -%}
-				<div class="selector-wrapper mb-1">
+				<div class="selector-wrapper mb-1" data-custom-selector>
 					{%- assign name = option.name | downcase -%}
-					<label class="form-label{% if name contains 'size' %} mb-1{% else %} mb-3{% endif %}" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}:</label>
+					{%- assign option_index = forloop.index0 -%}
+					<label class="form-label{% if name contains 'size' %} mb-1{% else %} mb-3 mb-lg-2{% endif %}" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}:</label>
 					<ul class="d-flex flex-wrap">
 						{%- for value in option.values -%}
-							<li class="{% if name contains 'size' %} col-2 size{% else %}col-6{% endif %}" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector>{{ value }}</li>
+							<li class="{% if name contains 'size' %} col-2 size{% else %}col-6{% endif %}" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector @click="onOptionClick" data-value="{{ value }}">{{ value }}</li>
 						{%- endfor -%}
 					</ul>
 					<!-- <label class="form-label" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}</label>
@@ -64,11 +52,10 @@
 			<span data-add-to-cart-text>
 				{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
 			</span>
-			<span class="price">
+			<span  class="price">
 				{{ current_variant.price | money_without_trailing_zeros }}
 			</span>
 			<span class="loading-copy pulse">{{ 'products.product.add_to_cart_loading' | t }}</span>
 		</button>
 	</div>
-	
-{%- endform -%}
+</form>

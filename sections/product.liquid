@@ -1,60 +1,147 @@
 <script src="{{ 'generic-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<script src="{{ 'product.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 {{ 'product.css' | asset_url | stylesheet_tag: preload: true }}
+{%- liquid
+	assign current_variant = product.selected_or_first_available_variant
+	assign icons = section.blocks | where: 'type', 'icon'
+	assign featured_image = current_variant.featured_image | default: product.featured_image
+-%}
 
-{%- assign current_variant = product.selected_or_first_available_variant -%}
-{%- assign icons = section.blocks | where: 'type', 'icon' -%}
-
-<div class="container" data-section-id="{{ section.id }}" data-section-type="genericSlider">
-	<div class="row d-lg-none">
-		<div class="col-12">
-			<div class="title-wrapper mb-3">
-				<h1>{{ product.title }}</h1>
-				<div class="review-wrapper d-flex align-items-center">
-					<div class="d-flex">
-						{%- for i in (1..5) -%}
-							{%- render 'icons' with 'star' -%}
-						{%- endfor -%}
+<div data-section-id="{{ section.id }}" data-section-type="product">
+	<div id="product-page" class="container" data-section-id="{{ section.id }}" data-section-type="genericSlider">
+		<div class="row d-lg-none">
+			<div class="col-12">
+				<div class="title-wrapper mb-3">
+					<h1>{{ product.title }}</h1>
+					<div class="review-wrapper d-flex align-items-center">
+						<div class="d-flex">
+							{%- for i in (1..5) -%}
+								{%- render 'icons' with 'star' -%}
+							{%- endfor -%}
+						</div>
+						<a class="reviews" href="#" title="Reviews">150 Reviews</a>
 					</div>
-					<a class="reviews" href="#" title="Reviews">150 Reviews</a>
+					{%- comment -%} Display Price {%- endcomment -%}
+					{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
 				</div>
-				{%- comment -%} Display Price {%- endcomment -%}
-				{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
 			</div>
 		</div>
-	</div>
-	<div class="row image-slider d-lg-none mb-5" data-generic-slider data-loop="false" data-arrows="false" data-adaptive-height="false">
-		{%- render 'product-gallery' with product as product -%}
-	</div>
-	<div class="row">
-		<div class="col-lg-8 d-none desktop-gallery">
+		<div class="row image-slider d-lg-none mb-5" data-generic-slider data-loop="false" data-arrows="false" data-adaptive-height="false">
 			{%- render 'product-gallery' with product as product -%}
 		</div>
-		<div class="col-lg-4 ps-lg-4">
-			{%- render 'product-form' with product as product, current_variant: current_variant -%}
-			<div class="guarantee-wrapper d-flex justify-content-center">
-				{%- render 'icons' with 'package' -%}
-				<p class="mb-0">90-day comfort guarantee</p>
+		<div class="row">
+			<div class="col-lg-8 d-none desktop-gallery">
+				{%- render 'product-gallery' with product as product -%}
+			</div>
+			<div class="col-lg-4 ps-lg-4">
+				<div class="price-title-wrapper d-none d-lg-block">
+					<h1>{{ product.title }}</h1>
+					<div class="review-wrapper d-flex align-items-center">
+						<div class="d-flex">
+							{%- for i in (1..5) -%}
+								{%- render 'icons' with 'star' -%}
+							{%- endfor -%}
+						</div>
+						<a class="reviews" href="#" title="Reviews">150 Reviews</a>
+					</div>
+					{%- comment -%} Display Price {%- endcomment -%}
+					{%- render 'product-price' with current_variant as product, context: 'product-page' -%}
+				</div>
+				<div class="rte product-description pt-lg-4">{{ product.description }}</div>
+				{%- render 'product-form' with product as product, current_variant: current_variant -%}
+				<div class="guarantee-wrapper d-flex justify-content-center">
+					{%- render 'icons' with 'package' -%}
+					<p class="mb-0">90-day comfort guarantee</p>
+				</div>
 			</div>
 		</div>
+		{%- if icons.size > 0 -%}
+			<div class="row icons justify-content-between justify-content-lg-center mt-5">
+				{%- for block in icons -%}
+					{%- if block.settings.icon != blank and block.settings.title != blank -%}
+						<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0">
+							<div class="icon-wrapper d-flex justify-content-center align-items-center">
+								{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
+							</div>
+							<div class="copy-wrapper text-center mb-3 px-2">
+								<p class="mb-0">{{ block.settings.title }}</p>
+							</div>
+						</div>
+					{%- endif -%}
+				{%- endfor -%}
+			</div>
+		{%- endif -%}
 	</div>
-	{%- if icons.size > 0 -%}
-		<div class="row icons justify-content-lg-center mt-5">
-			{%- for block in icons -%}
-				{%- if block.settings.icon != blank and block.settings.title != blank -%}
-					<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0">
-						<div class="icon-wrapper d-flex justify-content-center align-items-center">
-							{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
-						</div>
-						<div class="copy-wrapper text-center mb-3 px-3">
-							<p class="mb-0">{{ block.settings.title }}</p>
-						</div>
-					</div>
-				{%- endif -%}
-			{%- endfor -%}
-		</div>
-		
-	{%- endif -%}
+	<script type="application/json" data-product-json>{{ product | json }}</script>
 </div>
+
+<script>
+	const ProductPage = {
+		data() {
+			return {
+				currentVariantId: '{{ current_variant.id }}',
+				variant_selection: {
+					option1: "{{ product.options_with_values[0].selected_value }}",
+					option2: "{{ product.options_with_values[1].selected_value }}",
+					option3: "{{ product.options_with_values[2].selected_value }}"
+				},
+				variants: [
+					{%- for variant in product.variants -%}
+						{
+							id: "{{ variant.id }}",
+							available: {{ variant.available }},
+							option1: "{{ variant.option1 }}",
+							option2: "{{ variant.option2 }}",
+							option3: "{{ variant.option3 }}",
+							price: "{{ variant.price | money }}",
+							{% assign img_url = variant.image.src | image_url: '500x', scale: 2 %}
+							image: "{%- unless img_url contains 'no-image' -%}{{ img_url }}{%- endunless -%}"
+						},
+					{%- endfor -%}
+				],
+				fallback_product_image: "{{ featured_image | image_url: '500x', scale: 2 }}"
+			}
+		},
+		methods: {
+			/**
+			 * Update data based on clicked element data attributes
+			 * @param {Object} event
+			*/
+			onOptionClick(event) {
+				const option = event.target.dataset['index'];
+				console.log(event.target.dataset['value']);
+				this.variant_selection[option] = event.target.dataset['value'];
+				
+				this.variantFromOptions();
+			},
+			/**
+			 * Loop through v 
+			 */
+			variantFromOptions() {
+				console.log('this.variants', this.variants)
+				const variant = this.variants.find((variant) => {
+					let match = true;
+					if (variant.option1 != '') {
+						match = variant.option1 == this.variant_selection
+						console.log(variant.option1, this.variant_selection)
+					}
+					if (match && variant.option2 != '') {
+						match = variant.option2 == this.variant_selection.option2
+					}
+					if (match && variant.option2 != '') {
+						match = variant.option3 == this.variant_selection.option3
+					}
+					return match;
+				});
+				console.log('id', this.currentVariantId, variant.id);
+				this.currentVariantId = variant.id
+			}
+		}
+	}
+
+	Vue.createApp(ProductPage).mount('#product-page');
+</script>
 
 {% schema %}
 {

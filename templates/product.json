@@ -40,18 +40,9 @@
       ],
       "settings": {
       }
-    },
-    "product-recommendations": {
-      "type": "product-recommendations",
-      "settings": {
-        "alignment": "center",
-        "heading": "Recommended for you",
-        "show_secondary_image": true
-      }
     }
   },
   "order": [
-    "main",
-    "product-recommendations"
+    "main"
   ]
 }

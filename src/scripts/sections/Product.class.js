@@ -31,6 +31,7 @@ class Product {
 			productPrice			: '[data-product-price]',
 			comparePrice			: '[data-compare-price]',
 			variantSKU				: '[data-variant-sku]',
+			variantID				: '[data-variant-id]',
 			priceWrapper			: '[data-price-wrapper]',
 			productFeaturedImage	: '[data-product-featured-image]',
 			productJSON				: '[data-product-json]',
@@ -54,12 +55,13 @@ class Product {
 		this.productDATA  			= JSON.parse(this._container.querySelector(this._selectors.productJSON).innerHTML);
 		
 		// ELEMENTS (Pre-selected)
-		this.featuredImage			= this._container.querySelector(this._selectors.productFeaturedImage);
+		// this.featuredImage			= this._container.querySelector(this._selectors.productFeaturedImage);
 		this.thumbnails				= this._container.querySelectorAll(this._selectors.productThumbnails);
 		this.selectorBlocks 		= this._container.querySelectorAll(this._selectors.selectorBlocks);
 		this.addToCartBtn 			= this._container.querySelector(this._selectors.addToCartBtn);
 		this.properties				= this._container.querySelectorAll(this._selectors.properties);
 		this.quantity				= this._container.querySelector(this._selectors.quantity);
+		this.variantID				= this._container.querySelector(this._selectors.variantID);
 		
 		// Options
 		this._options = {
@@ -91,15 +93,15 @@ class Product {
 		this._container.addEventListener('variantChange', (e) => {
 			this.updateVariantSKU(e);
 			this.updateAddToCartState(e);
-			this.setActiveThumbnail(e.detail.variant.id || null);
+			// this.setActiveThumbnail(e.detail.variant.id || null);
 		});
 		this._container.addEventListener('variantImageChange', (e) => this.updateMainImage(e));
 		this._container.addEventListener('variantPriceChange', (e) => this.updateVariantPrice(e));
-		this.thumbnails.forEach((el) => el.addEventListener('click', (e) => this.thumbnailClick(e)));
+		// this.thumbnails.forEach((el) => el.addEventListener('click', (e) => this.thumbnailClick(e)));
 		this.addToCartBtn.addEventListener('click', (e) => this.addToCart(e));
 
 		// Reset 'loaded' class when changing `src` value
-		this.featuredImage.addEventListener('load', () => this.featuredImage.classList.add('loaded'));
+		// this.featuredImage.addEventListener('load', () => this.featuredImage.classList.add('loaded'));
 	}
 	
 	/**
@@ -175,39 +177,39 @@ class Product {
 	 * and lazy loading data
 	 * @param {String} src
 	 */
-	updateMainImageData(src) {
-		if (!src) return;
+	// updateMainImageData(src) {
+	// 	if (!src) return;
 
-		// Remove loaded class to reset the state of the image animation
-		this.featuredImage.classList.remove('loaded');
+	// 	// Remove loaded class to reset the state of the image animation
+	// 	this.featuredImage.classList.remove('loaded');
 
-		// Update the main image
-		this.featuredImage.setAttribute('data-srcset', '');
-		this.featuredImage.setAttribute('srcset', '');
+	// 	// Update the main image
+	// 	this.featuredImage.setAttribute('data-srcset', '');
+	// 	this.featuredImage.setAttribute('srcset', '');
 			
-		// Show image directly - no lazy loading
-		this.featuredImage.src = src;
-	}
+	// 	// Show image directly - no lazy loading
+	// 	this.featuredImage.src = src;
+	// }
 	
 	/**
 	 * On thumbnail click
 	 * @param {Object} e 
 	 */
-	thumbnailClick(e) {
-		e.preventDefault();
-		const target = e.currentTarget;
-		const variantID = target.dataset.mediaVariantId || null;
+	// thumbnailClick(e) {
+	// 	e.preventDefault();
+	// 	const target = e.currentTarget;
+	// 	const variantID = target.dataset.mediaVariantId || null;
 
-		const url = target.getAttribute('href');
-		if (url) this.updateMainImageData(url);
+	// 	const url = target.getAttribute('href');
+	// 	if (url) this.updateMainImageData(url);
 		
-		// Set active thumbnail
-		this.setActiveThumbnail(variantID, target);
+	// 	// Set active thumbnail
+	// 	this.setActiveThumbnail(variantID, target);
 		
-		// Set new current variant
-		if (variantID)
-			this.variants.updateCurrentVariant(variantID, e);
-	}
+	// 	// Set new current variant
+	// 	if (variantID)
+	// 		this.variants.updateCurrentVariant(variantID, e);
+	// }
 
 	/**
 	 * Set active state to Thumbnails
@@ -237,12 +239,14 @@ class Product {
 		const qty 				= Math.abs(parseInt(this.quantity.value || 1));
 
 		// Get current Variant
-		const currentVariant = this.variants.getCurrentVariant();
+		const currentVariant = this.variantID;
+
+		console.log('variant', currentVariant.value);
 		
 		// AddToCart Method from Variants
 		// will return if window.bluedgeusa.theme.dynamicCartActive == false
 		// and will not preventDefault()
-		const dynamicCart = this.variants.addToCart(qty, currentVariant.id, this.getProperties(), null);
+		const dynamicCart = this.variants.addToCart(qty, currentVariant.value, this.getProperties(), null);
 		
 		// Stop event if Dynamic Cart is Active
 		if (dynamicCart)
@@ -326,13 +330,13 @@ class Product {
 		this._container.removeEventListener('variantChange', (e) => {
 			this.updateVariantSKU(e);
 			this.updateAddToCartState(e);
-			this.setActiveThumbnail(e.detail.variant.id || null);
+			// this.setActiveThumbnail(e.detail.variant.id || null);
 		});
-		this._container.removeEventListener('variantImageChange', (e) => this.updateMainImage(e));
+		// this._container.removeEventListener('variantImageChange', (e) => this.updateMainImage(e));
 		this._container.removeEventListener('variantPriceChange', (e) => this.updateVariantPrice(e));
-		this.thumbnails.forEach((el) => el.removeEventListener('click', (e) => this.thumbnailClick(e)));
+		// this.thumbnails.forEach((el) => el.removeEventListener('click', (e) => this.thumbnailClick(e)));
 		this.addToCartBtn.removeEventListener('click', (e) => this.addToCart(e));
-		this.featuredImage.removeEventListener('load', () => this.featuredImage.classList.add('loaded'));
+		// this.featuredImage.removeEventListener('load', () => this.featuredImage.classList.add('loaded'));
 	}
 }
 

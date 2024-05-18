@@ -1,0 +1,62 @@
+<script>
+	const ProductPage = {
+		data() {
+			return {
+				currentVariantId: '{{ current_variant.id }}',
+				variant_selection: {
+					option1: "{{ product.options_with_values[0].selected_value }}",
+					option2: "{{ product.options_with_values[1].selected_value }}",
+					option3: "{{ product.options_with_values[2].selected_value }}"
+				},
+				variants: [
+					{%- for variant in product.variants -%}
+						{
+							id: "{{ variant.id }}",
+							available: {{ variant.available }},
+							option1: "{{ variant.option1 }}",
+							option2: "{{ variant.option2 }}",
+							option3: "{{ variant.option3 }}",
+							price: "{{ variant.price | money }}",
+							{% assign img_url = variant.image.src | image_url: '500x', scale: 2 %}
+							image: "{%- unless img_url contains 'no-image' -%}{{ img_url }}{%- endunless -%}"
+						},
+					{%- endfor -%}
+				],
+				fallback_product_image: "{{ featured_image | image_url: '500x', scale: 2 }}"
+			}
+		},
+		methods: {
+			/**
+			 * Update data based on clicked element data attributes
+			 * @param {Object} event
+			*/
+			onOptionClick(event) {
+				const option = event.target.dataset['index'];
+				console.log(event.target.dataset['value']);
+				this.variant_selection[option] = event.target.dataset['value'];
+				console.log('variant', this.variant_selection)
+			},
+			/**
+			 * Loop through v 
+			 */
+			variantFromOptions() {
+				const variant = this.variants.find((variant) => {
+					const match = true;
+					if (variant.option1 != '') {
+						match = variant.option1 == this.variant_selection
+					}
+					if (match && variant.option2 != '') {
+						match = variant.option2 == this.variant_selection.option2
+					}
+					if (match && variant.option2 != '') {
+						match = variant.option3 == this.variant_selection.option3
+					}
+					return match;
+				});
+				this.currentVariantId = variant.id
+			}
+		}
+	}
+
+	Vue.createApp(ProductPage).mount('#product-page');
+</script>

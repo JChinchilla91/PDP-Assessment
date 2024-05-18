@@ -47,6 +47,7 @@
 			background-color: $accent-gold; border-radius: 100%;  width: 126px; height: 126px;
 			img { max-height: 85px; }
 			.copy-wrapper p { font-size: .875rem; line-height: 1.1875rem; letter-spacing: -0.01em; }
+			&:nth-child(even) { align-items: end; }
 		}
 	}
 
@@ -80,6 +81,7 @@
 			ul { max-width: 64%; }
 		}
 		.guarantee-wrapper {
+			padding-top: 1.375rem; padding-bottom: 1.375rem;
 			p { font-size: 1.5rem; }
 		}
 
