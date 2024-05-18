@@ -2,7 +2,7 @@
 {{ 'product.css' | asset_url | stylesheet_tag: preload: true }}
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
-{%- assign icons = section.settings.blocks | where: 'type', 'icon' -%}
+{%- assign icons = section.blocks | where: 'type', 'icon' -%}
 
 <div class="container" data-section-id="{{ section.id }}" data-section-type="genericSlider">
 	<div class="row d-lg-none">
@@ -38,15 +38,15 @@
 		</div>
 	</div>
 	{%- if icons.size > 0 -%}
-		<div class="row icons">
+		<div class="row icons mt-5">
 			{%- for block in icons -%}
-				{%- if block.settings.icon != blank and block.settings.copy != blank -%}
-					<div class="col-6 col-lg-2">
-						<div class="icon-wrapper">
-							{%- render 'responsive-image', image: block.settings.icons, image_class: 'img-fluid' -%}
+				{%- if block.settings.icon != blank and block.settings.title != blank -%}
+					<div class="col-6 col-lg-2 d-flex flex-column mb-2">
+						<div class="icon-wrapper d-flex justify-content-center align-items-center">
+							{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
 						</div>
-						<div class="copy-wrapper">
-							<p>{{ block.settings.copy }}</p>
+						<div class="copy-wrapper text-center mb-3 px-3">
+							<p class="mb-0">{{ block.settings.title }}</p>
 						</div>
 					</div>
 				{%- endif -%}
@@ -76,7 +76,7 @@
 				},
 				{
 					"type": "text",
-					"id": "copy",
+					"id": "title",
 					"label": "Copy"
 				}
 			]

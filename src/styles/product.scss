@@ -42,8 +42,12 @@
 		column-gap: .5rem; padding-top: .6875rem; padding-bottom: .6875rem;
 		p { line-height: 1.1875rem; letter-spacing: -0.01em; }
 	}
-	.icon-wrapper {
-		background-color: $accent-gold; border-radius: 100%;  width: 126px; height: 126px;
+	.icons {
+		.icon-wrapper {
+			background-color: $accent-gold; border-radius: 100%;  width: 126px; height: 126px;
+			img { max-height: 85px; }
+			.copy-wrapper p { font-size: .875rem; line-height: 1.1875rem; letter-spacing: -0.01em; }
+		}
 	}
 
 	@include break ($lg) {
@@ -62,6 +66,12 @@
 				margin-top: var(--bs-gutter-y);
 			}
 		}
+
+		.icons {
+			.icons-wrapper {
+				.col-lg-1 { width: 11.333%; }
+			}
+		} 
 	}
 }
 

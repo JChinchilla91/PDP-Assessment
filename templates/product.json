@@ -1,39 +1,57 @@
 {
   "sections": {
-	"main": {
-	  "type": "product",
-	  "blocks": {
-		"vendor": {
-		  "type": "text",
-		  "settings": {
-			"text": "{{ product.vendor }}"
-		  }
-		},
-		"sku": {
-		  "type": "sku",
-		  "settings": {
-			"sku": "Sku:"
-		  }
-		},
-		"limitedEdition": {
-			"type": "limitedEdition"
-		}
-	  },
-	  "block_order": [
-		"vendor",
-		"sku",
-		"limitedEdition"
-	  ],
-	  "settings": {
-	  }
-	},
-	"product-recommendations": {
-		"type": "product-recommendations",
-		"settings": {}
-	}
+    "main": {
+      "type": "product",
+      "blocks": {
+        "icon_DD6BHe": {
+          "type": "icon",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/Fingerprint_Icon_81942779-3f13-407c-b2d5-e22ff607201c_1.png",
+            "title": "Custom molding technology"
+          }
+        },
+        "icon_bzefCw": {
+          "type": "icon",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/Comfort_Icon_c21f0e32-63ca-4c39-ac36-caf357ebab85_1.png",
+            "title": "Supreme comfort"
+          }
+        },
+        "icon_d8q3zg": {
+          "type": "icon",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/image_79.png",
+            "title": "Designed by doctors"
+          }
+        },
+        "icon_imqVeX": {
+          "type": "icon",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/Earth_Icon_b1c56a7c-5b26-402d-86e2-7ed0ed39b256_1.png",
+            "title": "Certified carbon negative"
+          }
+        }
+      },
+      "block_order": [
+        "icon_DD6BHe",
+        "icon_bzefCw",
+        "icon_d8q3zg",
+        "icon_imqVeX"
+      ],
+      "settings": {
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "alignment": "center",
+        "heading": "Recommended for you",
+        "show_secondary_image": true
+      }
+    }
   },
   "order": [
-	"main",
-	"product-recommendations"
+    "main",
+    "product-recommendations"
   ]
 }

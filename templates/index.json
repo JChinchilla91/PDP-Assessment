@@ -1,129 +1,127 @@
 {
   "sections": {
-	"166387778406500db1": {
-	  "type": "hero-slider-flickity",
-	  "blocks": {
-		"166387778444e4eef7-0": {
-		  "type": "image",
-		  "settings": {
-			"slider_image": "shopify:\/\/shop_images\/model-in-neutral-colors-by-window.jpg",
-			"slider_image_mobile": "shopify:\/\/shop_images\/model-laughs-barefoot.jpg",
-			"hero_heading": "Image slide",
-			"hero_sub_heading": "Tell your brand's story through images",
-			"hero_caption": "caption",
-			"hero_btn_text": "Button label",
-			"hero_btn_link": "shopify:\/\/collections"
-		  }
-		},
-		"166387778444e4eef7-1": {
-		  "type": "image",
-		  "settings": {
-			"slider_image": "shopify:\/\/shop_images\/woman-in-white-dress-outside.jpg",
-			"slider_image_mobile": "shopify:\/\/shop_images\/fashion-model-in-fur.jpg",
-			"hero_heading": "Image slide",
-			"hero_sub_heading": "Tell your brand's story through images",
-			"hero_caption": "caption",
-			"hero_btn_text": "Button label",
-			"hero_btn_link": "shopify:\/\/collections"
-		  }
-		}
-	  },
-	  "block_order": [
-		"166387778444e4eef7-0",
-		"166387778444e4eef7-1"
-	  ],
-	  "settings": {
-		"hero_overlay_color": "",
-		"range_opacity": 20
-	  }
-	},
-	"166213490083ab60cd": {
-	  "type": "featured-collection",
-	  "blocks": {
-		"1662134900dbe14800-0": {
-		  "type": "header",
-		  "settings": {
-			"header": "Collection"
-		  }
-		},
-		"1662134900dbe14800-1": {
-		  "type": "subheader",
-		  "settings": {
-			"sub_header": "Summer 2022"
-		  }
-		}
-	  },
-	  "block_order": [
-		"1662134900dbe14800-0",
-		"1662134900dbe14800-1"
-	  ],
-	  "settings": {
-		"collection": "all-stuff",
-		"number_of_products": "9"
-	  }
-	},
-	"1663878031442b760e": {
-	  "type": "video-banner",
-	  "settings": {
-		"provider": "vimeo",
-		"autoplay": false,
-		"video_id": "226053498",
-		"hero_heading": "Video heading",
-		"hero_sub_heading": "subheading",
-		"hero_caption": "caption",
-		"hero_btn_text": "",
-		"hero_btn_link": "shopify:\/\/collections"
-	  }
-	},
-	"16638784250bee379e": {
-	  "type": "text-highlight",
-	  "blocks": {
-		"1663878425c9d26ba1-0": {
-		  "type": "links",
-		  "settings": {
-			"title": "Link label",
-			"link": "shopify:\/\/collections"
-		  }
-		}
-	  },
-	  "block_order": [
-		"1663878425c9d26ba1-0"
-	  ],
-	  "settings": {
-		"header": "Talk about your brand",
-		"copy": "Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store."
-	  }
-	},
-	"166387856957ce36d9": {
-	  "type": "hero-slider-bootstrap",
-	  "blocks": {
-		"1663878569925cd3ed-0": {
-		  "type": "image",
-		  "settings": {
-			"slider_image": "shopify:\/\/shop_images\/model-in-neutral-colors-by-window.jpg",
-			"slider_image_mobile": "shopify:\/\/shop_images\/model-laughs-barefoot.jpg",
-			"hero_heading": "Image slide",
-			"hero_sub_heading": "Tell your brand's story through images",
-			"hero_caption": "caption",
-			"hero_btn_text": "Button label",
-			"hero_btn_link": "shopify:\/\/collections"
-		  }
-		}
-	  },
-	  "block_order": [
-		"1663878569925cd3ed-0"
-	  ],
-	  "settings": {
-		"hero_overlay_color": "",
-		"range_opacity": 20
-	  }
-	}
+    "166387778406500db1": {
+      "type": "hero-slider-flickity",
+      "blocks": {
+        "166387778444e4eef7-0": {
+          "type": "image",
+          "settings": {
+            "slider_image": "shopify:\/\/shop_images\/model-in-neutral-colors-by-window.jpg",
+            "slider_image_mobile": "shopify:\/\/shop_images\/model-laughs-barefoot.jpg",
+            "hero_heading": "Image slide",
+            "hero_sub_heading": "Tell your brand's story through images",
+            "hero_caption": "caption",
+            "hero_btn_text": "Button label",
+            "hero_btn_link": "shopify:\/\/collections"
+          }
+        },
+        "166387778444e4eef7-1": {
+          "type": "image",
+          "settings": {
+            "slider_image": "shopify:\/\/shop_images\/woman-in-white-dress-outside.jpg",
+            "slider_image_mobile": "shopify:\/\/shop_images\/fashion-model-in-fur.jpg",
+            "hero_heading": "Image slide",
+            "hero_sub_heading": "Tell your brand's story through images",
+            "hero_caption": "caption",
+            "hero_btn_text": "Button label",
+            "hero_btn_link": "shopify:\/\/collections"
+          }
+        }
+      },
+      "block_order": [
+        "166387778444e4eef7-0",
+        "166387778444e4eef7-1"
+      ],
+      "settings": {
+        "hero_overlay_color": "",
+        "range_opacity": 20
+      }
+    },
+    "166213490083ab60cd": {
+      "type": "featured-collection",
+      "blocks": {
+        "1662134900dbe14800-0": {
+          "type": "header",
+          "settings": {
+          }
+        },
+        "1662134900dbe14800-1": {
+          "type": "subheader",
+          "settings": {
+            "sub_header": "Summer 2022"
+          }
+        }
+      },
+      "block_order": [
+        "1662134900dbe14800-0",
+        "1662134900dbe14800-1"
+      ],
+      "settings": {
+        "collection": "all-stuff",
+        "number_of_products": "9"
+      }
+    },
+    "1663878031442b760e": {
+      "type": "video-banner",
+      "settings": {
+        "provider": "vimeo",
+        "autoplay": false,
+        "video_id": "226053498",
+        "hero_heading": "Video heading",
+        "hero_sub_heading": "subheading",
+        "hero_caption": "caption",
+        "hero_btn_text": "",
+        "hero_btn_link": "shopify:\/\/collections"
+      }
+    },
+    "16638784250bee379e": {
+      "type": "text-highlight",
+      "blocks": {
+        "1663878425c9d26ba1-0": {
+          "type": "links",
+          "settings": {
+            "title": "Link label",
+            "link": "shopify:\/\/collections"
+          }
+        }
+      },
+      "block_order": [
+        "1663878425c9d26ba1-0"
+      ],
+      "settings": {
+        "copy": "Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store."
+      }
+    },
+    "166387856957ce36d9": {
+      "type": "hero-slider-bootstrap",
+      "blocks": {
+        "1663878569925cd3ed-0": {
+          "type": "image",
+          "settings": {
+            "slider_image": "shopify:\/\/shop_images\/model-in-neutral-colors-by-window.jpg",
+            "slider_image_mobile": "shopify:\/\/shop_images\/model-laughs-barefoot.jpg",
+            "hero_heading": "Image slide",
+            "hero_sub_heading": "Tell your brand's story through images",
+            "hero_caption": "caption",
+            "hero_btn_text": "Button label",
+            "hero_btn_link": "shopify:\/\/collections"
+          }
+        }
+      },
+      "block_order": [
+        "1663878569925cd3ed-0"
+      ],
+      "settings": {
+        "hero_overlay_color": "",
+        "range_opacity": 20
+      }
+    }
   },
   "order": [
-	"166387778406500db1",
-	"166213490083ab60cd",
-	"1663878031442b760e",
-	"16638784250bee379e",
-	"166387856957ce36d9"
+    "166387778406500db1",
+    "166213490083ab60cd",
+    "1663878031442b760e",
+    "16638784250bee379e",
+    "166387856957ce36d9"
   ]
 }
