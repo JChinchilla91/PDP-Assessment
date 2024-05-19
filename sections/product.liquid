@@ -81,10 +81,12 @@
 		data() {
 			return {
 				currentVariantId: '{{ current_variant.id }}',
+				currentVariantPrice: '{{ curent_variant.price | money }}',
 				variant_selection: {
 					option1: "{{ product.options_with_values[0].selected_value }}",
 					option2: "{{ product.options_with_values[1].selected_value }}",
-					option3: "{{ product.options_with_values[2].selected_value }}"
+					option3: "{{ product.options_with_values[2].selected_value }}",
+					options: "{{ current_variant.options }}"
 				},
 				variants: [
 					{%- for variant in product.variants -%}
@@ -94,13 +96,18 @@
 							option1: "{{ variant.option1 }}",
 							option2: "{{ variant.option2 }}",
 							option3: "{{ variant.option3 }}",
-							price: "{{ variant.price | money }}",
+							price: "{{ variant.price | money_without_trailing_zeros }}",
 							{% assign img_url = variant.image.src | image_url: '500x', scale: 2 %}
 							image: "{%- unless img_url contains 'no-image' -%}{{ img_url }}{%- endunless -%}"
 						},
 					{%- endfor -%}
 				],
 				fallback_product_image: "{{ featured_image | image_url: '500x', scale: 2 }}"
+			}
+		},
+		computed: {
+			current_variant() {
+				return this.variants.find((variant) => variant.id == this.currentVariantId)
 			}
 		},
 		methods: {
@@ -118,21 +125,24 @@
 			 * Find variant based on selected values
 			 */
 			variantFromOptions() {
-				const variant = this.variants.find((variant) => {
-					let match = true;
+				const sizes = [];
+				const variant = this.variants.filter((variant) => {
+					let match = false;
 					if (variant.option1 != '') {
 						match = variant.option1 == this.variant_selection.option1
 					}
 					if (match && variant.option2 != '') {
 						match = variant.option2 == this.variant_selection.option2
 					}
-					if (match && variant.option2 != '') {
+					if (match && variant.option3 != '') {
+						if (match) sizes.push(variant.option3);
 						match = variant.option3 == this.variant_selection.option3
 					}
 					return match;
 				});
-				console.log('id', this.currentVariantId, variant.id);
-				this.currentVariantId = variant.id
+				console.log('sizes', sizes);
+				if (!variant[0]) return null; 
+				this.currentVariantId = variant[0].id
 			}
 		}
 	}
