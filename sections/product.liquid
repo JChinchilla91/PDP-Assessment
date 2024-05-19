@@ -110,21 +110,18 @@
 			*/
 			onOptionClick(event) {
 				const option = event.target.dataset['index'];
-				console.log(event.target.dataset['value']);
 				this.variant_selection[option] = event.target.dataset['value'];
 				
 				this.variantFromOptions();
 			},
 			/**
-			 * Loop through v 
+			 * Find variant based on selected values
 			 */
 			variantFromOptions() {
-				console.log('this.variants', this.variants)
 				const variant = this.variants.find((variant) => {
 					let match = true;
 					if (variant.option1 != '') {
-						match = variant.option1 == this.variant_selection
-						console.log(variant.option1, this.variant_selection)
+						match = variant.option1 == this.variant_selection.option1
 					}
 					if (match && variant.option2 != '') {
 						match = variant.option2 == this.variant_selection.option2
