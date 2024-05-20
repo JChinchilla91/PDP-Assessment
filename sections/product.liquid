@@ -81,7 +81,7 @@
 		data() {
 			return {
 				currentVariantId: '{{ current_variant.id }}',
-				currentVariantPrice: '{{ curent_variant.price | money }}',
+				currentVariantPrice: '{{ current_variant.price | money }}',
 				percentageOff: 0,
 				variant_selection: {
 					option1: "{{ product.options_with_values[0].selected_value }}",
@@ -173,7 +173,7 @@
 			calculatePercentageOff(variant) {
 				if (!variant) return null;
 
-				// Remove $ and add zeros to match product price
+				// Remove $ and add zeros to match product price format
 				const formattedPrice = (parseInt(variant.price.replace('$', '')) * 100);
 				
 				// If price differs, calculate percentage and set variable

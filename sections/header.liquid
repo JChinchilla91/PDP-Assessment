@@ -1,9 +1,6 @@
 <header>
 	<nav class="navbar navbar-expand-md navbar-light bg-light p-lg-3">
 		<div class="container-fluid">
-			<a class="navbar-brand me-auto" title="brand" href="{{ shop.url }}">
-				<div class="logo">{%- render 'icons' with 'logo' -%}</div>
-			</a>
 			{%- render 'predictive-search', context: 'mobile' -%}
 			<!-- Offcanvas -->
 			<a class="cart-link px-2 d-md-none" href="#drawerCart" title="cart"{%- unless template.name == 'cart' -%} data-bs-toggle="offcanvas" role="button" aria-controls="drawerCart"{%-else -%} onclick="return false;"{%- endunless -%}>
