@@ -30,13 +30,21 @@
             "icon": "shopify:\/\/shop_images\/Earth_Icon_b1c56a7c-5b26-402d-86e2-7ed0ed39b256_1.png",
             "title": "Certified carbon negative"
           }
+        },
+        "icon_ThrjhP": {
+          "type": "icon",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/image_79.png",
+            "title": "Designed by doctors"
+          }
         }
       },
       "block_order": [
         "icon_DD6BHe",
         "icon_bzefCw",
         "icon_d8q3zg",
-        "icon_imqVeX"
+        "icon_imqVeX",
+        "icon_ThrjhP"
       ],
       "settings": {
       }

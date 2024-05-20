@@ -60,7 +60,7 @@
 			<div class="row icons justify-content-between justify-content-lg-center mt-5">
 				{%- for block in icons -%}
 					{%- if block.settings.icon != blank and block.settings.title != blank -%}
-						<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0">
+						<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0{% if forloop.index > 4 %} d-none d-lg-block{% endif %}">
 							<div class="icon-wrapper d-flex justify-content-center align-items-center mx-auto">
 								{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
 							</div>
