@@ -47,11 +47,11 @@
 -%}
 <div class="d-flex align-items-center" data-price-wrapper>
 	{%- assign price_text = product.price | money_without_trailing_zeros -%}	
-	<span data-product-price>{{ price_text }}</span>
+	<span v-html="current_variant.price"></span>
 	<span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span><s class="ms-2 compare-price" data-compare-price>{{ product.compare_at_price | money_without_trailing_zeros }}</s>
 	{%- if discount != blank -%}
 		<div class="ms-3 p-2" data-discount-off>
-			{{ discount }}{{ 'products.product.percentage_off' | t }}
+			<span v-html="percentageOff">{{ discount }}</span>{{ 'products.product.percentage_off' | t }}
 		</div>
 	{%- endif -%}
 </div>

@@ -40,7 +40,7 @@
 	.product-thumbnail iframe { min-height: 18.75rem; }
 	.guarantee-wrapper {
 		column-gap: .5rem; padding-top: .6875rem; padding-bottom: .6875rem;
-		p { line-height: 1.1875rem; letter-spacing: -0.01em; }
+		p { line-height: 1.1875rem; letter-spacing: -0.01em; white-space: nowrap; }
 	}
 	.icons {
 		.icon-wrapper {
@@ -86,11 +86,19 @@
 		}
 
 		.icons {
+			.col-lg-2 { width: 21.667%; }
+			.icon-wrapper {
+				width: 176px; height: 176px;
+			}
+		}
+	}
+	@include break ($xxl) {
+		.icons {
 			.col-lg-2 { width: 15.667%; }
 			.icon-wrapper {
 				width: 200px; height: 200px;
 			}
-		} 
+		}
 	}
 }
 

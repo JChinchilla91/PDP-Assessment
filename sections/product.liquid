@@ -61,7 +61,7 @@
 				{%- for block in icons -%}
 					{%- if block.settings.icon != blank and block.settings.title != blank -%}
 						<div class="col-6 col-lg-2 d-flex flex-column mb-2 px-lg-0">
-							<div class="icon-wrapper d-flex justify-content-center align-items-center">
+							<div class="icon-wrapper d-flex justify-content-center align-items-center mx-auto">
 								{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', wrapper_class: 'px-3' -%}
 							</div>
 							<div class="copy-wrapper text-center mb-3 px-2">
@@ -82,6 +82,7 @@
 			return {
 				currentVariantId: '{{ current_variant.id }}',
 				currentVariantPrice: '{{ curent_variant.price | money }}',
+				percentageOff: 0,
 				variant_selection: {
 					option1: "{{ product.options_with_values[0].selected_value }}",
 					option2: "{{ product.options_with_values[1].selected_value }}",
@@ -96,13 +97,18 @@
 							option1: "{{ variant.option1 }}",
 							option2: "{{ variant.option2 }}",
 							option3: "{{ variant.option3 }}",
+							options: "{{ variant.options }}",
 							price: "{{ variant.price | money_without_trailing_zeros }}",
 							{% assign img_url = variant.image.src | image_url: '500x', scale: 2 %}
-							image: "{%- unless img_url contains 'no-image' -%}{{ img_url }}{%- endunless -%}"
+							image: "{%- unless img_url contains 'no-image' -%}{{ img_url }}{%- endunless -%}",
+							compareAtPrice: '{{ variant.compare_at_price | money_without_trailing_zeros }}',
+							product: {{ variant.product | json }}
 						},
 					{%- endfor -%}
 				],
-				fallback_product_image: "{{ featured_image | image_url: '500x', scale: 2 }}"
+				fallback_product_image: "{{ featured_image | image_url: '500x', scale: 2 }}",
+				options: {},
+				addToCartDisabled: true
 			}
 		},
 		computed: {
@@ -118,7 +124,8 @@
 			onOptionClick(event) {
 				const option = event.target.dataset['index'];
 				this.variant_selection[option] = event.target.dataset['value'];
-				
+
+				this.options[event.target.dataset['option']] = event.target.dataset['value'];
 				this.variantFromOptions();
 			},
 			/**
@@ -126,6 +133,10 @@
 			 */
 			variantFromOptions() {
 				const sizes = [];
+				const chosenOptions = [];
+				for (const [,v] of Object.entries(this.options)) {
+					chosenOptions.push(v);
+				}
 				const variant = this.variants.filter((variant) => {
 					let match = false;
 					if (variant.option1 != '') {
@@ -140,10 +151,41 @@
 					}
 					return match;
 				});
-				console.log('sizes', sizes);
-				if (!variant[0]) return null; 
+				this.$refs.sizes.childNodes.forEach((node) => {
+					if (!sizes.includes(node.dataset.value)) {
+						node.classList.add('hide')
+					} else {
+						node.classList.remove('hide')
+					}
+				})
+				if (!variant[0]) return null;
+				this.calculatePercentageOff(variant[0]);
+				if (chosenOptions.join('') === variant[0].options) {
+					this.addToCartDisabled = false
+				}
+
 				this.currentVariantId = variant[0].id
+			},
+			/**
+			 * Calculate percentage off current variant
+			 * @param {Object} variant
+			*/
+			calculatePercentageOff(variant) {
+				if (!variant) return null;
+
+				// Remove $ and add zeros to match product price
+				const formattedPrice = (parseInt(variant.price.replace('$', '')) * 100);
+				
+				// If price differs, calculate percentage and set variable
+				if (variant.product.compare_at_price > formattedPrice) {
+					const discountPercentage = Math.floor(((variant.product.compare_at_price - formattedPrice)*100) / variant.product.compare_at_price);
+					this.percentageOff = discountPercentage;
+				}
 			}
+		},
+		mounted() {
+			// Start by calculating percentage
+			this.calculatePercentageOff(this.current_variant);
 		}
 	}
 

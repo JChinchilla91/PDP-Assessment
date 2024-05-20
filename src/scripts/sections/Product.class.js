@@ -92,7 +92,7 @@ class Product {
 		// Note variant from Variants class is stored in e.detail
 		this._container.addEventListener('variantChange', (e) => {
 			this.updateVariantSKU(e);
-			this.updateAddToCartState(e);
+			// this.updateAddToCartState(e);
 			// this.setActiveThumbnail(e.detail.variant.id || null);
 		});
 		this._container.addEventListener('variantImageChange', (e) => this.updateMainImage(e));
@@ -142,6 +142,8 @@ class Product {
 	updateVariantPrice(e) {
 		const variantPrice = this._container.querySelector(this._selectors.productPrice);
 		const comparePrice = this._container.querySelector(this._selectors.comparePrice);
+
+		if (!variantPrice) return;
 		
 		// Actual Price
 		variantPrice.innerHTML = window.bluedgeusa.core.Currency.formatMoney(e.detail.variant.price);
@@ -240,8 +242,6 @@ class Product {
 
 		// Get current Variant
 		const currentVariant = this.variantID;
-
-		console.log('variant', currentVariant.value);
 		
 		// AddToCart Method from Variants
 		// will return if window.bluedgeusa.theme.dynamicCartActive == false

@@ -33,7 +33,7 @@
 					{%- assign name = option.name | downcase -%}
 					{%- assign option_index = forloop.index0 -%}
 					<label class="form-label{% if name contains 'size' %} mb-1{% else %} mb-3 mb-lg-2{% endif %}" for="SingleOptionSelector-{{ option_index }}">{{ option.name }}:</label>
-					<ul class="d-flex flex-wrap">
+					<ul class="d-flex{% if name contains 'size' %} flex-wrap sizes{% endif %}" ref="sizes">
 						{%- if name contains 'size' -%}
 							{%- liquid
 								assign sizeArr = option.values | join: ','
@@ -48,11 +48,11 @@
 								assign  sortedSizeArr = sortedSizeArr | split:"," | sort
 							-%}
 							{%- for i in sortedSizeArr -%}
-								<li class="col-2 size" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector @click="onOptionClick" data-value="{{ i | abs }}">{{ i | abs }}</li>
+								<li class="col-2 size" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector @click="onOptionClick" data-option="{{ name }}" data-value="{{ i | abs }}">{{ i | abs }}</li>
 							{%- endfor -%}
 						{%- else -%}
 							{%- for value in option.values -%}
-								<li class="col-6" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector @click="onOptionClick" data-value="{{ value }}">{{ value }}</li>
+								<li class="col-6" id="SingleOptionSelector-{{ option_index }}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-single-option-selector @click="onOptionClick" data-option="{{ name }}" data-value="{{ value }}">{{ value }}</li>
 							{%- endfor -%}
 						{%- endif -%}
 					</ul>
@@ -66,7 +66,7 @@
 		{%- endfor -%}
 	{%- endunless -%}
 	<div class="btn-wrapper mt-4 pt-2">
-		<button class="btn btn-primary position-relative d-flex justify-content-center w-100" type="submit" name="add" data-add-to-cart disabled="disabled">
+		<button class="btn btn-primary position-relative d-flex justify-content-center w-100" type="submit" name="add" data-add-to-cart :disabled="addToCartDisabled">
 			<span data-add-to-cart-text>
 				{%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
 			</span>

@@ -32,6 +32,7 @@
 				background: $main-green;
 				color: $gold;
 			}
+			&.hide { display: none; }
 			&:hover {
 				background: $main-green;
 				color: $white;
