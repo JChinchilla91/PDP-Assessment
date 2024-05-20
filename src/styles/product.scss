@@ -86,15 +86,19 @@
 		}
 
 		.icons {
-			.col-lg-2 { width: 21.667%; }
+			.col-lg-2 { width: 19.667%; }
 			.icon-wrapper {
 				width: 176px; height: 176px;
 			}
 		}
 	}
-	@include break ($xxl) {
+	@include break ($xl) {
 		.icons {
 			.col-lg-2 { width: 15.667%; }
+		}
+	}
+	@include break ($xxl) {
+		.icons {
 			.icon-wrapper {
 				width: 200px; height: 200px;
 			}
